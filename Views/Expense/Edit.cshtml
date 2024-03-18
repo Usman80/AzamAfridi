@@ -7,33 +7,54 @@
                 $(this).val(0);
             }
         });
+        hideExistedExpenseOnRoutesData();
+        UpdateIdValuesDynamically();
+        //Hide the existed Expense on Routes
+        function hideExistedExpenseOnRoutesData() {
+            
+            $(".DeleteExpenseOnRouteTypes").hide();
+            $(".Amount").prop('disabled', true);
+            $(".ExpenseTypeId").prop('disabled', true);
+        }
+
+        function UpdateIdValuesDynamically() {
+            var count = 1;
+            $('.Amount').each(function () {
+                if (this.id) {
+                    this.id = this.id.split('-')[0] + "-" + count;
+                    count++;
+                }
+            });
+            count = 1;
+            $('.ExpenseTypeId').each(function () {
+                if (this.id) {
+                    this.id = this.id.split('-')[0] + "-" + count;
+                    count++;
+                }
+            });
+            count = 1;
+            $('.ErrAmount').each(function () {
+                if (this.id) {
+                    this.id = this.id.split('-')[0] + "-" + count;
+                    count++;
+                }
+            });
+            count = 1;
+            $('.ExpenseOnRouteID').each(function () {
+                if (this.id) {
+                    this.id = this.id.split('-')[0] + "-" + count;
+                    count++;
+                }
+            });
+        }
+
         $("#AddExpenseTypes").click(function () {
             //$("#ExpenseOnRouteTypes").clone().appendTo($("#ExpenseTypes"));
             $.ajax({
                 url: '/Expense/ExpenseOnRoute',
                 success: function (partialView) {
                     $('#ExpenseTypes').append(partialView);
-                    var count = 1;
-                    $('.Amount').each(function () {
-                        if (this.id) {
-                            this.id = this.id.split('-')[0] + "-" + count;
-                            count++;
-                        }
-                    });
-                    count = 1;
-                    $('.ExpenseTypeId').each(function () {
-                        if (this.id) {
-                            this.id = this.id.split('-')[0] + "-" + count;
-                            count++;
-                        }
-                    });
-                    count = 1;
-                    $('.ErrAmount').each(function () {
-                        if (this.id) {
-                            this.id = this.id.split('-')[0] + "-" + count;
-                            count++;
-                        }
-                    });
+                    UpdateIdValuesDynamically();
                 }
             });
 
@@ -42,7 +63,7 @@
         function PreSave() {
             var validform = true;
             if ($("#BuiltyNo").val() == '') {
-                $("#ErrBuiltyNo").html("Required *"); 
+                $("#ErrBuiltyNo").html("Required *");
                 validform = false;
             }
             if ($("#DriveName").val() == '') {
@@ -85,6 +106,7 @@
             debugger;
             if (PreSave()) {
                 var Model = {};
+                Model.RouteID = $("#RouteID").val();
                 Model.BuiltyNo = $("#BuiltyNo").val();
                 Model.DriveName = $("#DriveName").val();
                 Model.TruckNo = $("#TruckNo").val();
@@ -101,6 +123,7 @@
                 var count = 1;
                 $('.Amount').each(function () {
                     var ExpenseType = {};
+                    ExpenseType.ExpenseOnRouteID = parseInt($("#ExpenseOnRouteID-"+count).val());
                     ExpenseType.ExpenseTypeId = parseInt($("#ExpenseTypeId-" + count).val());
                     ExpenseType.Amount = parseFloat($("#Amount-" + count).val());
                     Model.Expenses.push(ExpenseType);
@@ -108,18 +131,12 @@
                 });
                 //Model = JSON.stringify({ 'Model': Model });
                 $.ajax({
-                    url: "/Expense/SaveBuilty",
+                    url: "/Expense/UpdateBuilty",
                     type: "Post",
                     data: Model,
                     success: function (response) {
-                        if (response.isAlreadyExist) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Duplicate!",
-                                text: "Builty Number: " + $("#BuiltyNo").val() + " already exists in the system"
-                            });
-                        }
-                        else if (response.isSaved) {
+                        debugger;
+                        if (response.isSaved) {
                             Swal.fire({
                                 title: "Success!",
                                 text: "Builty Saved Successfully!",
@@ -160,15 +177,14 @@
             $('#TotalIncome').val(result.toFixed(2));
         }
 
-        function CalculateTotalExpenseTypeAmount() { 
+        function CalculateTotalExpenseTypeAmount() {
             var sum = 0;
             $('.Amount').each(function () {
                 var val = parseFloat($(this).val());
-                if (!isNaN(val) && val>=0) {
+                if (!isNaN(val) && val >= 0) {
                     sum += val;
                 }
-                else
-                {
+                else {
                     $(this).val(0)
                 }
             });
@@ -184,7 +200,7 @@
             debugger;
             var sum = 0;
             var FromFare = parseFloat($("#FromFare").val());
-            if (isNaN(FromFare) || FromFare <=0) {
+            if (isNaN(FromFare) || FromFare <= 0) {
                 FromFare = 0;
             }
             sum += FromFare;
@@ -222,14 +238,15 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">New Builty</h3>
+                <h3 class="card-title">Edit Builty</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="BuiltyNo">Builty No:</label>
-                            <input type="text" class="form-control" id="BuiltyNo" value="@Model.BuiltyNo" placeholder="Builty Number">
+                            <input type="hidden" class="form-control" id="RouteID" value="@Model.RouteID">
+                            <input type="text" class="form-control" id="BuiltyNo" value="@Model.BuiltyNo" placeholder="Builty Number" disabled="disabled">
                             <label id="ErrBuiltyNo" style="color:red;"></label>
                         </div>
                     </div>
@@ -252,7 +269,12 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Date">Date:</label>
-                            <input type="date" class="form-control" value="@Model.Date" id="Date">
+                            @{
+                                string Month = Model.Date.Month < 10 ? "0" + Model.Date.Month : Model.Date.Month.ToString();
+                                string day = Model.Date.Day < 10 ? "0" + Model.Date.Day : Model.Date.Day.ToString();
+                                string date = Model.Date.Year + "-" + Month + "-" + day;
+                            }
+                            <input type="date" class="form-control" value="@date" id="Date">
                             <label id="ErrDate" style="color:red;"></label>
                         </div>
                     </div>
@@ -266,7 +288,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="FromStation">From Station:</label>
-                            @Html.DropDownListFor(model => model.FromStation,(SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "FromStation" })
+                            @Html.DropDownListFor(model => model.FromStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "FromStation" })
                         </div>
                     </div>
                 </div>
@@ -317,7 +339,13 @@
                     <button type="button" class="btn btn-success btn-flat" id="AddExpenseTypes">Add</button>
                 </span>
                 <div id="ExpenseTypes">
-                    @Html.Partial("ExpenseOnRoute", new ExpenseOnRoute())
+                    @if (Model.Expenses != null && Model.Expenses.Count() > 0)
+                    {
+                        @foreach (var ExpenseOnRoute in Model.Expenses)
+                        {
+                            @Html.Partial("ExpenseOnRoute", ExpenseOnRoute)
+                        }
+                    }
                 </div>
                 <span class="input-group-append">
                     <button type="button" class="btn btn-primary btn-flat" id="SaveBuilty">Save Builty</button>

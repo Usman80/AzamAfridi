@@ -4,6 +4,7 @@ using AzamAfridi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzamAfridi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316181230_AddExpenseType")]
+    partial class AddExpenseType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,39 +24,6 @@ namespace AzamAfridi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AzamAfridi.Models.ExpenseOnRoute", b =>
-                {
-                    b.Property<int>("ExpenseOnRouteID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExpenseOnRouteID"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ExpenseTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RouteDetailBuiltyNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RouteDetailRouteID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RouteID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ExpenseOnRouteID");
-
-                    b.HasIndex("ExpenseTypeId");
-
-                    b.HasIndex("RouteDetailRouteID", "RouteDetailBuiltyNo");
-
-                    b.ToTable("ExpenseOnRoutes");
-                });
 
             modelBuilder.Entity("AzamAfridi.Models.ExpenseType", b =>
                 {
@@ -218,30 +188,6 @@ namespace AzamAfridi.Migrations
                             StationCode = "SHK",
                             StationDescription = "Sheikhapura"
                         });
-                });
-
-            modelBuilder.Entity("AzamAfridi.Models.ExpenseOnRoute", b =>
-                {
-                    b.HasOne("AzamAfridi.Models.ExpenseType", "ExpenseType")
-                        .WithMany()
-                        .HasForeignKey("ExpenseTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzamAfridi.Models.RouteDetail", "RouteDetail")
-                        .WithMany("Expenses")
-                        .HasForeignKey("RouteDetailRouteID", "RouteDetailBuiltyNo")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ExpenseType");
-
-                    b.Navigation("RouteDetail");
-                });
-
-            modelBuilder.Entity("AzamAfridi.Models.RouteDetail", b =>
-                {
-                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }

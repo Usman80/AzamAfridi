@@ -10,6 +10,8 @@ namespace AzamAfridi.Data
         }
         public DbSet<RouteDetail> RouteDetails { get; set; }
         public DbSet<StationName> StationNames { get; set; }
+        public DbSet<ExpenseType> ExpenseTypes { get; set; }
+        public DbSet<ExpenseOnRoute> ExpenseOnRoutes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RouteDetail>()
@@ -65,6 +67,26 @@ namespace AzamAfridi.Data
                 StationId = 8,
                 StationCode = "SHK",
                 StationDescription = "Sheikhapura"
+            });
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ExpenseType>().HasData(new ExpenseType
+            {
+                ExpenseTypeId = 1,
+                ExpenseTypeCode = "Diesel-Lit",
+                ExpenseTypeDescription = "Diesel Litter"
+            });
+            modelBuilder.Entity<ExpenseType>().HasData(new ExpenseType
+            {
+                ExpenseTypeId = 2,
+                ExpenseTypeCode = "Fix-Chrg",
+                ExpenseTypeDescription = "Fixed Charges"
+            });
+            modelBuilder.Entity<ExpenseType>().HasData(new ExpenseType
+            {
+                ExpenseTypeId = 3,
+                ExpenseTypeCode = "TollTax",
+                ExpenseTypeDescription = "Toll Tax"
             });
         }
     }

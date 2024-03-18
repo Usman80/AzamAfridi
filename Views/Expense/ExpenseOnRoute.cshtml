@@ -1,0 +1,23 @@
+﻿@model ExpenseOnRoute
+
+<div class="row" id="ExpenseOnRouteTypes">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Expense Type:</label>
+            @Html.DropDownListFor(model => model.ExpenseTypeId, (SelectList)ViewData["ExpenseTypeDDL"], new { @class = "form-control ExpenseTypeId", style = "width: 100%;", id = "ExpenseTypeId-1" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="Amount">Amount:</label>
+            <input type="number" class="form-control Amount" id="Amount-1" placeholder="Enter Amount" value="@Model.Amount">
+            <input type="hidden" value="@Model.ExpenseOnRouteID" id="ExpenseOnRouteID-1" class="ExpenseOnRouteID" />
+            <label id="ErrAmount-1" class="ErrAmount" style="color:red;"></label>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <i class="fa fa-trash-o DeleteExpenseOnRouteTypes" id="DeleteExpenseOnRouteTypes" style="font-size: 48px;color:red;margin-top: 24px;"></i>
+        </div>
+    </div>
+</div>
