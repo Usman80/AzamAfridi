@@ -1,18 +1,26 @@
 ﻿@model List<RouteDetail>
 
+<script>
+    $(document).ready(function () {
+        $("#CreateBuilty").click(function () {
+            window.location.href = '/Expense/Create';
+        });
+    });
+</script>
 
 
-@if (Model != null && Model.Count() > 0)
-{
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Builty Details</h3>
-                        </div>
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Builty Details</h3>
+                        <button type="button" class="btn btn-primary btn-flat" style="margin-left: 1000px;" id="CreateBuilty">Create Builty</button>
+                    </div>
+                    @if (Model != null && Model.Count() > 0)
+                    {
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table id="RouteDetails" class="table table-bordered table-striped">
@@ -30,6 +38,7 @@
                                         <th>Total Fare</th>
                                         <th>Total Expense</th>
                                         <th>Total Income</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -48,30 +57,31 @@
                                             <td>@data.TotalFare</td>
                                             <td>@data.TotalExpense</td>
                                             <td>@data.TotalIncome</td>
+                                            <td><a href="@Url.Action("Edit", "Expense", new { builtyNo = data.BuiltyNo })">Edit</a></td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
                         <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
+                    }
                 </div>
-                <!-- /.col -->
+                <!-- /.card -->
             </div>
-            <!-- /.row -->
+            <!-- /.col -->
         </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-    <script>
-        $(document).ready(function () {
-            $(function () {
-                $.noConflict();
-                $("#RouteDetails").DataTable({
-                    "responsive": true, "lengthChange": false, "autoWidth": false
-                }).buttons().container().appendTo('#RouteDetails_wrapper .col-md-6:eq(0)');
-            });
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $.noConflict();
+            $("#RouteDetails").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false
+            }).buttons().container().appendTo('#RouteDetails_wrapper .col-md-6:eq(0)');
         });
-    </script>
-}
+    });
+</script>

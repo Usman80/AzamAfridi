@@ -217,6 +217,11 @@
         $('#ExpenseTypes').on('click', '.DeleteExpenseOnRouteTypes', function () {
             $(this).closest('#ExpenseOnRouteTypes').remove();
             CalculateTotalExpenseTypeAmount();
+            UpdateIdValuesDynamically();
+        });
+
+        $("#Back").click(function () {
+            window.location.href = '/Expense/Index';
         });
     });
 </script>
@@ -349,6 +354,7 @@
                 </div>
                 <span class="input-group-append">
                     <button type="button" class="btn btn-primary btn-flat" id="SaveBuilty">Save Builty</button>
+                    <button type="button" class="btn btn-danger btn-flat" style="margin-left: 10px;" id="Back">Back</button>
                 </span>
             </div>
         </div>
