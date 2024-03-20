@@ -8,10 +8,20 @@
     });
 </script>
 
-
-<!-- Main content -->
-<section class="content">
+<div class="content-header">
     <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Builty</a></li>
+                    <li class="breadcrumb-item active">Create</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+@* <section class="content">
+    <div class="container-fluid"> *@
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -48,7 +58,7 @@
                                             <td>@data.BuiltyNo</td>
                                             <td>@data.DriveName</td>
                                             <td>@data.TruckNo</td>
-                                            <td>@data.Date.Date.ToString("dd/MM/yyyy")</td>
+                                            <td>@data.Start_Date.Date.ToString("dd/MM/yyyy")</td>
                                             <td>@data.Weight</td>
                                             <td>@data.FromStation</td>
                                             <td>@data.ToStation</td>
@@ -70,11 +80,8 @@
             </div>
             <!-- /.col -->
         </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-</section>
-<!-- /.content -->
+@*     </div>
+</section> *@
 <script>
     $(document).ready(function () {
         $(function () {

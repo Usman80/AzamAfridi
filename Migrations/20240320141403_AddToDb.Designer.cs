@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzamAfridi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240316181230_AddExpenseType")]
-    partial class AddExpenseType
+    [Migration("20240320141403_AddToDb")]
+    partial class AddToDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,39 @@ namespace AzamAfridi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AzamAfridi.Models.ExpenseOnRoute", b =>
+                {
+                    b.Property<int>("ExpenseOnRouteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExpenseOnRouteID"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ExpenseTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RouteDetailBuiltyNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RouteDetailRouteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RouteID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExpenseOnRouteID");
+
+                    b.HasIndex("ExpenseTypeId");
+
+                    b.HasIndex("RouteDetailRouteID", "RouteDetailBuiltyNo");
+
+                    b.ToTable("ExpenseOnRoutes");
+                });
 
             modelBuilder.Entity("AzamAfridi.Models.ExpenseType", b =>
                 {
@@ -77,9 +110,6 @@ namespace AzamAfridi.Migrations
                     b.Property<string>("BuiltyNo")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("DriveName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -90,6 +120,23 @@ namespace AzamAfridi.Migrations
                     b.Property<string>("FromStation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Return_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Return_FromStation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Return_ToStation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Return_Weight")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Start_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("ToFare")
                         .HasColumnType("float");
@@ -188,6 +235,30 @@ namespace AzamAfridi.Migrations
                             StationCode = "SHK",
                             StationDescription = "Sheikhapura"
                         });
+                });
+
+            modelBuilder.Entity("AzamAfridi.Models.ExpenseOnRoute", b =>
+                {
+                    b.HasOne("AzamAfridi.Models.ExpenseType", "ExpenseType")
+                        .WithMany()
+                        .HasForeignKey("ExpenseTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AzamAfridi.Models.RouteDetail", "RouteDetail")
+                        .WithMany("Expenses")
+                        .HasForeignKey("RouteDetailRouteID", "RouteDetailBuiltyNo")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExpenseType");
+
+                    b.Navigation("RouteDetail");
+                });
+
+            modelBuilder.Entity("AzamAfridi.Models.RouteDetail", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }

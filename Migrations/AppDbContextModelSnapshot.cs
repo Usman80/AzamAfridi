@@ -107,9 +107,6 @@ namespace AzamAfridi.Migrations
                     b.Property<string>("BuiltyNo")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("DriveName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -120,6 +117,23 @@ namespace AzamAfridi.Migrations
                     b.Property<string>("FromStation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Return_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Return_FromStation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Return_ToStation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Return_Weight")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Start_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("ToFare")
                         .HasColumnType("float");

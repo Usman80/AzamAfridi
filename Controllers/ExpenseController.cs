@@ -71,7 +71,7 @@ namespace AzamAfridi.Controllers
             {
                 return Json(new { isSaved = false, isAlreadyExist = true });
             }
-            var RouteId = _db.RouteDetails.Add(Model);
+            var RouteId =  _db.RouteDetails.Add(Model);
             _db.SaveChanges();
             return Json(new { isSaved = true });
         }
@@ -120,17 +120,21 @@ namespace AzamAfridi.Controllers
             if (isAlreadyExist != null && !string.IsNullOrEmpty(isAlreadyExist.BuiltyNo))
             {
                 isAlreadyExist.BuiltyNo = Model.BuiltyNo;
-                isAlreadyExist.Date = Model.Date;
-                isAlreadyExist.ToFare = Model.ToFare;
-                isAlreadyExist.TruckNo = Model.TruckNo;
-                isAlreadyExist.FromStation = Model.FromStation;
                 isAlreadyExist.DriveName = Model.DriveName;
-                isAlreadyExist.FromFare = Model.FromFare;
+                isAlreadyExist.TruckNo = Model.TruckNo;
+                isAlreadyExist.Start_Date = Model.Start_Date;
+                isAlreadyExist.Weight = Model.Weight;
+                isAlreadyExist.FromStation = Model.FromStation;
                 isAlreadyExist.ToStation = Model.ToStation;
+                isAlreadyExist.FromFare = Model.FromFare;
+                isAlreadyExist.Return_Date = Model.Return_Date;
+                isAlreadyExist.Return_Weight = Model.Return_Weight;
+                isAlreadyExist.Return_FromStation = Model.Return_FromStation;
+                isAlreadyExist.Return_ToStation = Model.Return_ToStation;
+                isAlreadyExist.ToFare = Model.ToFare;
                 isAlreadyExist.TotalExpense = Model.TotalExpense;
                 isAlreadyExist.TotalFare = Model.TotalFare;
                 isAlreadyExist.TotalIncome = Model.TotalIncome;
-                isAlreadyExist.Weight = Model.Weight;
                 if (isAlreadyExist.Expenses == null)
                 {
                     var lstExpenseOnRoute = _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToList();

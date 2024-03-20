@@ -2,16 +2,37 @@
 
 <script>
     $(document).ready(function () {
-        $('input[type="number"]').on('keyup', function () {
-            if ($(this).val() < 0) {
-                $(this).val(0);
+        $('#Weight,#Return_Weight').on('keypress', function (event) {
+            var keyCode = event.which ? event.which : event.keyCode;
+            var inputValue = $(this).val();
+            if (inputValue.length >= 10 || /^[0-9]*$/.test(String.fromCharCode(keyCode))) {
+                return true;
+            } else {
+                return false;
             }
+        });
+
+        function formatAmountWithCommas(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        $('#ToFare, #FromFare').on('keyup', function () {
+            var amountInput = $(this).val().replace(/,/g, '');
+            var amountPattern = /^\d+(\.\d{1,2})?$/;
+
+            if (!amountPattern.test(amountInput)) {
+                $(this).val("");
+                return;
+            }
+
+            var formattedAmount = formatAmountWithCommas(amountInput);
+            $(this).val(formattedAmount);
         });
         hideExistedExpenseOnRoutesData();
         UpdateIdValuesDynamically();
         //Hide the existed Expense on Routes
         function hideExistedExpenseOnRoutesData() {
-            
+
             $(".DeleteExpenseOnRouteTypes").hide();
             $(".Amount").prop('disabled', true);
             $(".ExpenseTypeId").prop('disabled', true);
@@ -74,19 +95,27 @@
                 $("#ErrTruckNo").html("Required *");
                 validform = false;
             }
-            if ($("#Date").val() == '') {
-                $("#ErrDate").html("Required *");
+            if ($("#Start_Date").val() == '') {
+                $("#ErrStart_Date").html("Required *");
+                validform = false;
+            }
+            if ($("#Return_Date").val() == '') {
+                $("#ErrReturn_Date").html("Required *");
                 validform = false;
             }
             if (isNaN($("#Weight").val()) || $("#Weight").val() == '') {
                 $("#ErrWeight").html("Required *");
                 validform = false;
             }
-            if (isNaN($("#FromFare").val()) || $("#FromFare").val() == '') {
+            if (isNaN($("#Return_Weight").val()) || $("#Return_Weight").val() == '') {
+                $("#ErrReturn_Weight").html("Required *");
+                validform = false;
+            }
+            if (isNaN($("#FromFare").val().replace(/,/g, '')) || $("#FromFare").val().replace(/,/g, '') == '') {
                 $("#ErrFromFare").html("Required *");
                 validform = false;
             }
-            if (isNaN($("#ToFare").val()) || $("#ToFare").val() == '') {
+            if (isNaN($("#ToFare").val().replace(/,/g, '')) || $("#ToFare").val().replace(/,/g, '') == '') {
                 $("#ErrToFare").html("Required *");
                 validform = false;
             }
@@ -103,29 +132,32 @@
         }
 
         $("#SaveBuilty").click(function () {
-            debugger;
             if (PreSave()) {
                 var Model = {};
                 Model.RouteID = $("#RouteID").val();
                 Model.BuiltyNo = $("#BuiltyNo").val();
                 Model.DriveName = $("#DriveName").val();
                 Model.TruckNo = $("#TruckNo").val();
-                Model.Date = $("#Date").val();
+                Model.Start_Date = $("#Start_Date").val();
                 Model.Weight = parseInt($("#Weight").val());
                 Model.FromStation = $("#FromStation").val();
                 Model.ToStation = $("#ToStation").val();
-                Model.FromFare = parseFloat($("#FromFare").val());
-                Model.ToFare = parseFloat($("#ToFare").val());
-                Model.TotalFare = parseFloat($("#TotalFare").val());
-                Model.TotalExpense = parseFloat($("#TotalExpense").val());
-                Model.TotalIncome = parseFloat($("#TotalIncome").val());
+                Model.FromFare = parseFloat($("#FromFare").val().replace(/,/g, ''));
+                Model.Return_Date = $("#Return_Date").val();
+                Model.Return_Weight = parseInt($("#Return_Weight").val());
+                Model.Return_FromStation = $("#Return_FromStation").val();
+                Model.Return_ToStation = $("#Return_ToStation").val();
+                Model.ToFare = parseFloat($("#ToFare").val().replace(/,/g, ''));
+                Model.TotalFare = parseFloat($("#TotalFare").val().replace(/,/g, ''));
+                Model.TotalExpense = parseFloat($("#TotalExpense").val().replace(/,/g, ''));
+                Model.TotalIncome = parseFloat($("#TotalIncome").val().replace(/,/g, ''));
                 Model.Expenses = [];
                 var count = 1;
                 $('.Amount').each(function () {
                     var ExpenseType = {};
-                    ExpenseType.ExpenseOnRouteID = parseInt($("#ExpenseOnRouteID-"+count).val());
+                    ExpenseType.ExpenseOnRouteID = parseInt($("#ExpenseOnRouteID-" + count).val());
                     ExpenseType.ExpenseTypeId = parseInt($("#ExpenseTypeId-" + count).val());
-                    ExpenseType.Amount = parseFloat($("#Amount-" + count).val());
+                    ExpenseType.Amount = parseFloat($("#Amount-" + count).val().replace(/,/g, ''));
                     Model.Expenses.push(ExpenseType);
                     count++;
                 });
@@ -139,12 +171,12 @@
                         if (response.isSaved) {
                             Swal.fire({
                                 title: "Success!",
-                                text: "Builty Saved Successfully!",
+                                text: "Builty Updated Successfully!",
                                 icon: "success"
                             });
+                            window.location.href = '/Expense/Index';
                         }
-                        else
-                        {
+                        else {
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops...",
@@ -165,22 +197,24 @@
 
         function CalculateTotalIncome() {
             var result = 0;
-            var TotalFare = parseFloat($("#TotalFare").val());
+            var TotalFare = parseFloat($("#TotalFare").val().replace(/,/g, ''));
             if (isNaN(TotalFare)) {
                 TotalFare = 0;
             }
-            var TotalExpense = parseFloat($("#TotalExpense").val());
+            var TotalExpense = parseFloat($("#TotalExpense").val().replace(/,/g, ''));
             if (isNaN(TotalExpense)) {
                 TotalExpense = 0;
             }
             result = TotalFare - TotalExpense;
-            $('#TotalIncome').val(result.toFixed(2));
+            var formattedAmount = formatAmountWithCommas(result);
+            // $('#TotalIncome').val(result.toFixed(2));
+            $('#TotalIncome').val(formattedAmount);
         }
 
         function CalculateTotalExpenseTypeAmount() {
             var sum = 0;
             $('.Amount').each(function () {
-                var val = parseFloat($(this).val());
+                var val = parseFloat($(this).val().replace(/,/g, ''));
                 if (!isNaN(val) && val >= 0) {
                     sum += val;
                 }
@@ -188,29 +222,46 @@
                     $(this).val(0)
                 }
             });
-            $('#TotalExpense').val(sum.toFixed(2));
+            var formattedAmount = formatAmountWithCommas(sum);
+            //$('#TotalExpense').val(sum.toFixed(2));
+            $('#TotalExpense').val(formattedAmount);
             CalculateTotalIncome();
         }
 
         $(document).on('input', '.Amount', function () {
+            var inputAmount = $(this).val().replace(/[^0-9.]/g, '');
+            var formattedAmount = formatAmount(inputAmount);
+            $(this).val(formattedAmount);
             CalculateTotalExpenseTypeAmount();
         });
+
+        function formatAmount(amount) {
+            if (!amount) return '';
+            amount = amount.replace(/[^\d.]/g, '');
+            var parts = amount.split('.');
+            var integerPart = parts[0];
+            var decimalPart = parts[1] ? '.' + parts[1] : '';
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return integerPart + decimalPart;
+        }
 
         $("#FromFare, #ToFare").on('change', function () {
             debugger;
             var sum = 0;
-            var FromFare = parseFloat($("#FromFare").val());
+            var FromFare = parseFloat($("#FromFare").val().replace(/,/g, ''));
             if (isNaN(FromFare) || FromFare <= 0) {
                 FromFare = 0;
             }
             sum += FromFare;
-            var ToFare = parseFloat($("#ToFare").val());
+            var ToFare = parseFloat($("#ToFare").val().replace(/,/g, ''));
             if (isNaN(ToFare) || ToFare <= 0) {
                 ToFare = 0;
             }
             sum += ToFare;
-            debugger;
-            $('#TotalFare').val(sum.toFixed(2));
+            var formattedAmount = formatAmountWithCommas(sum);
+            // $('#TotalFare').val(sum.toFixed(2));
+            $('#TotalFare').val("");
+            $('#TotalFare').val(formattedAmount);
             CalculateTotalIncome();
         });
 
@@ -232,8 +283,8 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Route Detail</a></li>
-                    <li class="breadcrumb-item active">Create</li>
+                    <li class="breadcrumb-item"><a href="#">Builty</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </div>
         </div>
@@ -248,94 +299,102 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="BuiltyNo">Builty No:</label>
-                            <input type="hidden" class="form-control" id="RouteID" value="@Model.RouteID">
-                            <input type="text" class="form-control" id="BuiltyNo" value="@Model.BuiltyNo" placeholder="Builty Number" disabled="disabled">
-                            <label id="ErrBuiltyNo" style="color:red;"></label>
-                        </div>
+                        <label for="BuiltyNo">Builty No:</label>
+                        <input type="hidden" class="form-control" id="RouteID" value="@Model.RouteID">
+                        <input type="text" class="form-control" id="BuiltyNo" value="@Model.BuiltyNo" placeholder="Builty Number" disabled="disabled">
+                        <label id="ErrBuiltyNo" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="DriveName">Driver Name:</label>
-                            <input type="text" class="form-control" id="DriveName" value="@Model.DriveName" placeholder="Drive Name">
-                            <label id="ErrDriveName" style="color:red;"></label>
-                        </div>
+                        <label for="DriveName">Driver Name:</label>
+                        <input type="text" class="form-control" id="DriveName" value="@Model.DriveName" placeholder="Drive Name">
+                        <label id="ErrDriveName" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="TruckNo">Truck No:</label>
-                            <input type="text" class="form-control" id="TruckNo" value="@Model.TruckNo" placeholder="Truck Number">
-                            <label id="ErrTruckNo" style="color:red;"></label>
-                        </div>
+                        <label for="TruckNo">Truck No:</label>
+                        <input type="text" class="form-control" id="TruckNo" value="@Model.TruckNo" placeholder="Truck Number">
+                        <label id="ErrTruckNo" style="color:red;"></label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="Date">Date:</label>
-                            @{
-                                string Month = Model.Date.Month < 10 ? "0" + Model.Date.Month : Model.Date.Month.ToString();
-                                string day = Model.Date.Day < 10 ? "0" + Model.Date.Day : Model.Date.Day.ToString();
-                                string date = Model.Date.Year + "-" + Month + "-" + day;
-                            }
-                            <input type="date" class="form-control" value="@date" id="Date">
-                            <label id="ErrDate" style="color:red;"></label>
-                        </div>
+                        <label for="Start_Date">Start Date:</label>
+                        @{
+                            string Month = Model.Start_Date.Month < 10 ? "0" + Model.Start_Date.Month : Model.Start_Date.Month.ToString();
+                            string day = Model.Start_Date.Day < 10 ? "0" + Model.Start_Date.Day : Model.Start_Date.Day.ToString();
+                            string date = Model.Start_Date.Year + "-" + Month + "-" + day;
+                        }
+                        <input type="date" class="form-control" value="@date" id="Start_Date">
+                        <label id="ErrStart_Date" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="Weight">Weight:</label>
-                            <input type="number" class="form-control" id="Weight" value="@Model.Weight" placeholder="Weight">
-                            <label id="ErrWeight" style="color:red;"></label>
-                        </div>
+                        <label for="Weight">Weight:</label>
+                        <input class="form-control" id="Weight" value="@Model.Weight" placeholder="Enter Weight">
+                        <label id="ErrWeight" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="FromStation">From Station:</label>
-                            @Html.DropDownListFor(model => model.FromStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "FromStation" })
-                        </div>
+                        <label for="FromStation">From Station:</label>
+                        @Html.DropDownListFor(model => model.FromStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "FromStation" })
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="ToStation">To Station:</label>
-                            @Html.DropDownListFor(model => model.ToStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "ToStation" })
-                        </div>
+                        <label for="ToStation">To Station:</label>
+                        @Html.DropDownListFor(model => model.ToStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "ToStation" })
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="FromFare">From-Fare:</label>
-                            <input type="number" class="form-control" id="FromFare" value="@Model.FromFare">
-                            <label id="ErrFromFare" style="color:red;"></label>
-                        </div>
+                        <label for="FromFare">Fare:</label>
+                        <input class="form-control" id="FromFare" value="@Model.FromFare">
+                        <label id="ErrFromFare" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="ToFare">To-Fare:</label>
-                            <input type="number" class="form-control" id="ToFare" value="@Model.ToFare">
-                            <label id="ErrToFare" style="color:red;"></label>
-                        </div>
+                        <label for="Return_Date">Return Date:</label>
+                        @{
+                            string R_Month = Model.Return_Date.Month < 10 ? "0" + Model.Return_Date.Month : Model.Return_Date.Month.ToString();
+                            string R_day = Model.Return_Date.Day < 10 ? "0" + Model.Return_Date.Day : Model.Return_Date.Day.ToString();
+                            string R_date = Model.Return_Date.Year + "-" + R_Month + "-" + R_day;
+                        }
+                        <input type="date" class="form-control" id="Return_Date" value="@R_date">
+                        <label id="ErrReturn_Date" style="color:red;"></label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="TotalFare">Total Fare:</label>
-                            <input type="number" class="form-control" id="TotalFare" disabled="disabled" value="@Model.TotalFare">
-                        </div>
+                        <label for="Return_Weight">Weight:</label>
+                        <input class="form-control" id="Return_Weight" value="@Model.Return_Weight" placeholder="Enter Weight">
+                        <label id="ErrReturn_Weight" style="color:red;"></label>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Return_FromStation">From Station:</label>
+                        @Html.DropDownListFor(model => model.Return_FromStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "Return_FromStation" })
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Return_ToStation">To Station:</label>
+                        @Html.DropDownListFor(model => model.Return_ToStation, (SelectList)ViewData["StationDDL"], new { @class = "form-control", style = "width: 100%;", id = "Return_ToStation" })
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="ToFare">To-Fare:</label>
+                        <input class="form-control" id="ToFare" value="@Model.ToFare">
+                        <label id="ErrToFare" style="color:red;"></label>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="TotalFare">Total Fare:</label>
+                        <input class="form-control" id="TotalFare" disabled="disabled" value="@Model.TotalFare">
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="TotalExpense">Total Expense:</label>
-                            <input type="email" class="form-control" id="TotalExpense" disabled="disabled" value="@Model.TotalExpense">
+                            <input class="form-control" id="TotalExpense" disabled="disabled" value="@Model.TotalExpense">
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="TotalIncome">Total Income:</label>
-                            <input type="email" class="form-control" id="TotalIncome" disabled="disabled" value="@Model.TotalIncome">
+                            <input class="form-control" id="TotalIncome" disabled="disabled" value="@Model.TotalIncome">
                         </div>
                     </div>
                 </div>
