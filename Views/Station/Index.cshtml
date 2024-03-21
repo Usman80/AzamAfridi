@@ -1,0 +1,66 @@
+﻿@model List<StationName>
+
+<script>
+    $(document).ready(function () {
+        $("#CreateStationName").click(function () {
+            window.location.href = '/Station/Create';
+        });
+    });
+</script>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Station Name</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Station Name Details</h3>
+                <button type="button" class="btn btn-primary btn-flat" style="margin-left: 1000px;" id="CreateStationName">Create</button>
+            </div>
+            @if (Model != null && Model.Count() > 0)
+            {
+                <div class="card-body">
+                    <table id="StationNames" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Station Code</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var data in Model)
+                            {
+                                <tr>
+                                    <td>@data.StationCode</td>
+                                    <td>@data.StationDescription</td>
+                                    <td><a href="@Url.Action("EditStation", "Station", new { StationId = data.StationId })">Edit</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $.noConflict();
+            $("#StationNames").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false
+            }).buttons().container().appendTo('#StationNames_wrapper .col-md-6:eq(0)');
+        });
+    });
+</script>

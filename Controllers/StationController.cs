@@ -1,41 +1,39 @@
 ﻿using AzamAfridi.Data;
 using AzamAfridi.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AzamAfridi.Controllers
 {
-    [Authorize]
-    public class ExpenseTypeController : Controller
+    public class StationController : Controller
     {
         private readonly AppDbContext _db;
-        public ExpenseTypeController(AppDbContext db)
+        public StationController(AppDbContext db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            var list = _db.ExpenseTypes.ToList();
+            var list = _db.StationNames.ToList();
             return View(list);
         }
         [HttpGet]
         public IActionResult Create()
         {
-            ExpenseType model = new ExpenseType();
+            StationName model = new StationName();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Create(ExpenseType expenseType)
+        public IActionResult Create(StationName stationName)
         {
-            _db.ExpenseTypes.Add(expenseType);
+            _db.StationNames.Add(stationName);
             _db.SaveChanges();
             return Json(new { isSaved = true });
         }
         [HttpGet]
-        public IActionResult EditExpense(int ExpenseType)
+        public IActionResult EditStation(int StationId)
         {
-            var data = _db.ExpenseTypes.Where(x => x.ExpenseTypeId == ExpenseType).FirstOrDefault();
+            var data = _db.StationNames.Where(x => x.StationId == StationId).FirstOrDefault();
             if (data != null)
             {
                 return View(data);
@@ -43,13 +41,13 @@ namespace AzamAfridi.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult EditExpense(ExpenseType model)
+        public IActionResult EditStation(StationName model)
         {
-            var data = _db.Set<ExpenseType>().SingleOrDefault(s => s.ExpenseTypeId == model.ExpenseTypeId);
+            var data = _db.Set<StationName>().SingleOrDefault(s => s.StationId == model.StationId);
             if (data != null)
             {
-                data.ExpenseTypeCode = model.ExpenseTypeCode;
-                data.ExpenseTypeDescription = model.ExpenseTypeDescription;
+                data.StationCode = model.StationCode;
+                data.StationDescription = model.StationDescription;
                 _db.Update(data);
                 _db.SaveChanges();
                 return Json(new { isSaved = true });

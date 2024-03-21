@@ -1,11 +1,13 @@
 ﻿using AzamAfridi.Data;
 using AzamAfridi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzamAfridi.Controllers
 {
+    [Authorize]
     public class ExpenseController : Controller
     {
         private readonly AppDbContext _db;
