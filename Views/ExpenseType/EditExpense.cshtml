@@ -1,0 +1,43 @@
+﻿@model ExpenseType
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Expense Type</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Edit Expense Type</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="ExpenseTypeCode">Type:</label>
+                        <input type="hidden" class="form-control" id="ExpenseTypeId" value="@Model.ExpenseTypeId">
+                        <input type="text" class="form-control" id="ExpenseTypeCode" value="@Model.ExpenseTypeCode" placeholder="Enter Expense Type">
+                        <label id="ErrExpenseTypeCode" style="color:red;"></label>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ExpenseTypeDescription">Description:</label>
+                        <input type="text" class="form-control" id="ExpenseTypeDescription" value="@Model.ExpenseTypeDescription" placeholder="Enter Expense Description">
+                        <label id="ErrExpenseTypeDescription" style="color:red;"></label>
+                    </div>
+                </div>
+                <span class="input-group-append">
+                    <button type="button" class="btn btn-primary btn-success" id="UpdateExpense">Update Builty</button>
+                    <button type="button" class="btn btn-danger btn-flat" style="margin-left: 10px;" id="Back">Back</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/js/jquery-ExpenseTypeEdit-min.js"></script>
