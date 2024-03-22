@@ -1,0 +1,104 @@
+﻿@model List<CombinedModel>
+<section class="content">
+    <div class="container-fluid">
+        @if (Model != null && Model.Count() > 0)
+        {
+            int recordNumber = 1;
+            foreach (var combineModel in Model)
+            {
+                foreach (var routedetail in combineModel.RouteDetails)
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="invoice p-3 mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>
+                                            <i class="fas fa-globe"></i> Azam Afridi, Pvt Ltd.
+                                            <small class="float-right">Trip# @recordNumber</small>
+                                        </h4>
+                                        @* Increment the record number counter *@
+                                        @{
+                                            recordNumber++;
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row invoice-info">
+                                    <div class="col-sm-6 invoice-col">
+                                        From
+                                        <br />
+                                        <b>Date:</b> @routedetail.StartDate<br />
+                                        <b>Station:</b>@routedetail.FromStation - @routedetail.ToStation<br />
+                                        <b>Wazan:</b> @routedetail.Weight<br />
+                                        <b>Karaya:</b> @routedetail.FromFare.ToString("N0")<br />
+                                    </div>
+                                    <div class="col-sm-6 invoice-col">
+                                        Return Trip
+                                        <br />
+                                        <b>Date:</b> @routedetail.ReturnDate<br />
+                                        <b>Station:</b>@routedetail.ReturnFromStation - @routedetail.ReturnToStation<br />
+                                        <b>Wazan:</b> @routedetail.ReturnWeight<br />
+                                        <b>Karaya:</b> @routedetail.ToFare.ToString("N0")<br />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Expense Description</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var expense in combineModel.Expenses)
+                                                {
+                                                    <tr>
+                                                        <td>@expense.ExpenseTypeDescription</td>
+                                                        <td>@expense.ExpenseAmount.ToString("N0")</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tr>
+                                                    <th style="width:67%">Total Karaya:</th>
+                                                    <td>@routedetail.TotalFare.ToString("N0")</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total Expense:</th>
+                                                    <td>@routedetail.TotalExpense.ToString("N0")</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total Income:</th>
+                                                    <td>@routedetail.TotalIncome.ToString("N0")</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row no-print">
+                                    <div class="col-12">
+                                        <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="callout callout-info">
+                <h5><i class="fas fa-warning"></i> Note:</h5>
+                No Data Found
+            </div>
+        }
+    </div>
+</section>
