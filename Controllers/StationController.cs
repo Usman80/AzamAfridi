@@ -1,9 +1,11 @@
 ﻿using AzamAfridi.Data;
 using AzamAfridi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AzamAfridi.Controllers
 {
+    [Authorize]
     public class StationController : Controller
     {
         private readonly AppDbContext _db;

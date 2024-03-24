@@ -1,0 +1,53 @@
+﻿<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">Home</li>
+                    <li class="breadcrumb-item active"><a href="#">Expense Type Report</a></li>
+
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                @Html.DropDownList("Expense_DDL", (SelectList)ViewData["ExpenseTypeDDL"], new { @class = "form-control ExpenseTypeId", style = "width: 100%;" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <input type="search" class="form-control form-control-lg" id="truckNoInput" placeholder="Enter Truck No">
+                                <div class="input-group-append">
+                                    <button type="submit" id="loadTypeReportBtn" class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              @*   <div class="row mt-3">
+                    <div class="col-md-10 offset-md-1">
+                        <div id="ExpenseTypeReportContainer"></div>
+                    </div>
+                </div> *@
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div id="ExpenseTypeReportContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/js/generateexpensereport/jquery-ExpenseTypeReport-min.js"></script>

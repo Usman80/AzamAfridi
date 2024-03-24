@@ -4,6 +4,7 @@
         @if (Model != null && Model.Count() > 0)
         {
             int recordNumber = 1;
+            decimal TotalIncome = 0;
             foreach (var combineModel in Model)
             {
                 foreach (var routedetail in combineModel.RouteDetails)
@@ -20,6 +21,7 @@
                                         @* Increment the record number counter *@
                                         @{
                                             recordNumber++;
+                                            TotalIncome = routedetail.TotalIncome + TotalIncome;
                                         }
                                     </div>
                                 </div>
@@ -67,15 +69,15 @@
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <tr>
-                                                    <th style="width:67%">Total Karaya:</th>
+                                                    <th style="width:67%">Total Trip Karaya:</th>
                                                     <td>@routedetail.TotalFare.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Total Expense:</th>
+                                                    <th>Total Trip Expense:</th>
                                                     <td>@routedetail.TotalExpense.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Total Income:</th>
+                                                    <th>Total Trip Income:</th>
                                                     <td>@routedetail.TotalIncome.ToString("N0")</td>
                                                 </tr>
                                             </table>
@@ -92,6 +94,18 @@
                     </div>
                 }
             }
+            <div class="row">
+                <div class="col-12">
+                    <div class="invoice p-3 mb-3">
+                        <div class="row invoice-info">
+                            <div class="col-sm-6 invoice-col">
+                                <br />
+                                <b>Total Truck Income:</b> @TotalIncome.ToString("N0")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
         else
         {

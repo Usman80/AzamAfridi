@@ -1,10 +1,12 @@
 ﻿using AzamAfridi.Data;
 using AzamAfridi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzamAfridi.Controllers
 {
+    [Authorize]
     public class ExpenseReportController : Controller
     {
         private readonly AppDbContext _db;
@@ -68,5 +70,6 @@ namespace AzamAfridi.Controllers
             //return View(combinedModelList);
             return PartialView("_ExpenseReportPartial", combinedModelList);
         }
+
     }
 }

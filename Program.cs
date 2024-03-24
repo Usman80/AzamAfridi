@@ -1,6 +1,8 @@
 using AutoMapper;
 using AzamAfridi.Data;
 using AzamAfridi.Models;
+using AzamAfridi.Service;
+using AzamAfridi.Service.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<AppDbContextIdentity>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 //IMapper mapper = MappingConfig.RegisterMap().CreateMapper();
 //builder.Services.AddSingleton(mapper);
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
