@@ -12,5 +12,6 @@ namespace AzamAfridi.Models
         public string StationCode { get; set; }
         [Required]
         public string StationDescription { get; set; }
+        public bool IsStation {  get; set; }
     }
 }

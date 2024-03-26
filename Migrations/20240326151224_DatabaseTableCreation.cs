@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AzamAfridi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddToDb : Migration
+    public partial class DatabaseTableCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,9 @@ namespace AzamAfridi.Migrations
                     ExpenseTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ExpenseTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpenseTypeDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ExpenseTypeDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expense_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsExpenseType = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,7 +50,8 @@ namespace AzamAfridi.Migrations
                     ToFare = table.Column<double>(type: "float", nullable: false),
                     TotalFare = table.Column<double>(type: "float", nullable: false),
                     TotalExpense = table.Column<double>(type: "float", nullable: false),
-                    TotalIncome = table.Column<double>(type: "float", nullable: false)
+                    TotalIncome = table.Column<double>(type: "float", nullable: false),
+                    Isbuilty = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +65,8 @@ namespace AzamAfridi.Migrations
                     StationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StationCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StationDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    StationDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsStation = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,27 +104,27 @@ namespace AzamAfridi.Migrations
 
             migrationBuilder.InsertData(
                 table: "ExpenseTypes",
-                columns: new[] { "ExpenseTypeId", "ExpenseTypeCode", "ExpenseTypeDescription" },
+                columns: new[] { "ExpenseTypeId", "ExpenseTypeCode", "ExpenseTypeDescription", "Expense_Date", "IsExpenseType" },
                 values: new object[,]
                 {
-                    { 1, "Diesel-Lit", "Diesel Litter" },
-                    { 2, "Fix-Chrg", "Fixed Charges" },
-                    { 3, "TollTax", "Toll Tax" }
+                    { 1, "Diesel-Lit", "Diesel Litter", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
+                    { 2, "Fix-Chrg", "Fixed Charges", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
+                    { 3, "TollTax", "Toll Tax", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false }
                 });
 
             migrationBuilder.InsertData(
                 table: "StationNames",
-                columns: new[] { "StationId", "StationCode", "StationDescription" },
+                columns: new[] { "StationId", "IsStation", "StationCode", "StationDescription" },
                 values: new object[,]
                 {
-                    { 1, "LHR", "Lahore" },
-                    { 2, "KHI", "Karachi" },
-                    { 3, "GUJ", "Gujrawala" },
-                    { 4, "MLT", "Multan" },
-                    { 5, "PESH", "Peshawar" },
-                    { 6, "MUR", "Murree" },
-                    { 7, "KHT", "Kohat" },
-                    { 8, "SHK", "Sheikhapura" }
+                    { 1, false, "LHR", "Lahore" },
+                    { 2, false, "KHI", "Karachi" },
+                    { 3, false, "GUJ", "Gujrawala" },
+                    { 4, false, "MLT", "Multan" },
+                    { 5, false, "PESH", "Peshawar" },
+                    { 6, false, "MUR", "Murree" },
+                    { 7, false, "KHT", "Kohat" },
+                    { 8, false, "SHK", "Sheikhapura" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -12,6 +12,7 @@ namespace AzamAfridi.Data
         public DbSet<StationName> StationNames { get; set; }
         public DbSet<ExpenseType> ExpenseTypes { get; set; }
         public DbSet<ExpenseOnRoute> ExpenseOnRoutes { get; set; }
+        public DbSet<Vehicle_Maintance> Maintance_Vehicles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RouteDetail>()

@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Azaam Afridi | Registration</title>
+    <title>Azam Afridi | Registration</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
@@ -68,20 +68,40 @@
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                     <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                                <label for="agreeTerms">
-                                    I agree to the <a href="#">terms</a>
-                                </label>
+                        <div class="input-group mb-3">
+                            <select asp-for="Role" class="custom-select rounded-0" asp-items="@ViewBag.RoleList">
+                                <option disabled selected>--Select Role--</option>
+                            </select>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user-tie"></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        @*  <div class="col-8">
+                        <div class="icheck-primary">
+                        <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                        <label for="agreeTerms">
+                        I agree to the <a href="#">terms</a>
+                        </label>
+                        </div>
+                        </div> *@
+                        <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block">Register</button>
                         </div>
                     </div>
                 </form>
-                <a class="text-center" asp-action="Login" asp-controller="Account">Login</a>
+                @* <a class="text-center" asp-action="Login" asp-controller="Account">Login</a> *@
+                <br />
+                <div class="row">
+                    <div class="col-12">
+                        @* <button type="submit" asp-action="Login" asp-controller="Account" class="btn btn-success btn-block">Login</button> *@
+                        <a class="text-center" asp-action="Login" asp-controller="Account">I already have a membership</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

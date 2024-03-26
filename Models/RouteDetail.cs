@@ -38,6 +38,7 @@ namespace AzamAfridi.Models
         public double TotalFare         { get; set; }
         public double TotalExpense      { get; set; }
         public double TotalIncome       { get; set; }
+        public bool Isbuilty {  get; set; } 
         public List<ExpenseOnRoute> Expenses { get; set; }
     }
 }

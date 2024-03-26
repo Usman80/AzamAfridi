@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzamAfridi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240320141403_AddToDb")]
-    partial class AddToDb
+    [Migration("20240326151224_DatabaseTableCreation")]
+    partial class DatabaseTableCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,12 @@ namespace AzamAfridi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Expense_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsExpenseType")
+                        .HasColumnType("bit");
+
                     b.HasKey("ExpenseTypeId");
 
                     b.ToTable("ExpenseTypes");
@@ -83,19 +89,25 @@ namespace AzamAfridi.Migrations
                         {
                             ExpenseTypeId = 1,
                             ExpenseTypeCode = "Diesel-Lit",
-                            ExpenseTypeDescription = "Diesel Litter"
+                            ExpenseTypeDescription = "Diesel Litter",
+                            Expense_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsExpenseType = false
                         },
                         new
                         {
                             ExpenseTypeId = 2,
                             ExpenseTypeCode = "Fix-Chrg",
-                            ExpenseTypeDescription = "Fixed Charges"
+                            ExpenseTypeDescription = "Fixed Charges",
+                            Expense_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsExpenseType = false
                         },
                         new
                         {
                             ExpenseTypeId = 3,
                             ExpenseTypeCode = "TollTax",
-                            ExpenseTypeDescription = "Toll Tax"
+                            ExpenseTypeDescription = "Toll Tax",
+                            Expense_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsExpenseType = false
                         });
                 });
 
@@ -120,6 +132,9 @@ namespace AzamAfridi.Migrations
                     b.Property<string>("FromStation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Isbuilty")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Return_Date")
                         .HasColumnType("datetime2");
@@ -174,6 +189,9 @@ namespace AzamAfridi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StationId"));
 
+                    b.Property<bool>("IsStation")
+                        .HasColumnType("bit");
+
                     b.Property<string>("StationCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -190,48 +208,56 @@ namespace AzamAfridi.Migrations
                         new
                         {
                             StationId = 1,
+                            IsStation = false,
                             StationCode = "LHR",
                             StationDescription = "Lahore"
                         },
                         new
                         {
                             StationId = 2,
+                            IsStation = false,
                             StationCode = "KHI",
                             StationDescription = "Karachi"
                         },
                         new
                         {
                             StationId = 3,
+                            IsStation = false,
                             StationCode = "GUJ",
                             StationDescription = "Gujrawala"
                         },
                         new
                         {
                             StationId = 4,
+                            IsStation = false,
                             StationCode = "MLT",
                             StationDescription = "Multan"
                         },
                         new
                         {
                             StationId = 5,
+                            IsStation = false,
                             StationCode = "PESH",
                             StationDescription = "Peshawar"
                         },
                         new
                         {
                             StationId = 6,
+                            IsStation = false,
                             StationCode = "MUR",
                             StationDescription = "Murree"
                         },
                         new
                         {
                             StationId = 7,
+                            IsStation = false,
                             StationCode = "KHT",
                             StationDescription = "Kohat"
                         },
                         new
                         {
                             StationId = 8,
+                            IsStation = false,
                             StationCode = "SHK",
                             StationDescription = "Sheikhapura"
                         });
