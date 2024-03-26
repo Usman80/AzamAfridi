@@ -50,6 +50,7 @@ namespace AzamAfridi.Migrations
                     TotalFare = table.Column<double>(type: "float", nullable: false),
                     TotalExpense = table.Column<double>(type: "float", nullable: false),
                     TotalIncome = table.Column<double>(type: "float", nullable: false),
+                    TotalMaintance = table.Column<double>(type: "float", nullable: false),
                     Isbuilty = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

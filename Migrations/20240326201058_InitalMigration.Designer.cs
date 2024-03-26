@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzamAfridi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240326184723_InitalMigration")]
+    [Migration("20240326201058_InitalMigration")]
     partial class InitalMigration
     {
         /// <inheritdoc />
@@ -164,6 +164,9 @@ namespace AzamAfridi.Migrations
                         .HasColumnType("float");
 
                     b.Property<double>("TotalIncome")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalMaintance")
                         .HasColumnType("float");
 
                     b.Property<string>("TruckNo")

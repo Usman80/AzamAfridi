@@ -103,6 +103,10 @@
                         <label for="TotalIncome">Total Income:</label>
                         <input class="form-control" id="TotalIncome" disabled="disabled" value="@Model.TotalIncome">
                     </div>
+                    <div class="col-md-4">
+                        <label for="TotalMaintance">Total Maintance:</label>
+                        <input class="form-control" id="TotalMaintance" disabled="disabled" value="@Model.TotalMaintance">
+                    </div>
                 </div>
                 @* Add Expense Regarding Trip *@
                 <hr />
@@ -110,7 +114,7 @@
                     <button type="button" class="btn btn-success btn-flat" id="AddExpenseTypes">Add</button>
                 </span>
                 <div id="ExpenseTypes">
-                    @Html.PartialAsync("ExpenseOnRoute", new ExpenseOnRoute())
+                    @Html.Partial("ExpenseOnRoute", new ExpenseOnRoute())
                 </div>
                 @* Add Maintance Regarding Vehicle *@
                 <hr />
@@ -118,7 +122,7 @@
                     <button type="button" class="btn btn-success btn-flat" id="AddMaintanceVeh">Add</button>
                 </span>
                 <div id="MaintanceVeh">
-                    @Html.PartialAsync("VehicleMaintance", new Vehicle_Maintance())
+                    @Html.Partial("VehicleMaintance", new Vehicle_Maintance())
                 </div>
                 <span class="input-group-append">
                     <button type="button" class="btn btn-primary btn-flat" id="SaveBuilty">Save Builty</button>

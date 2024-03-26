@@ -163,6 +163,9 @@ namespace AzamAfridi.Migrations
                     b.Property<double>("TotalIncome")
                         .HasColumnType("float");
 
+                    b.Property<double>("TotalMaintance")
+                        .HasColumnType("float");
+
                     b.Property<string>("TruckNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

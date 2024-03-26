@@ -71,6 +71,50 @@
 
     });
 
+    $("#AddMaintanceVeh").click(function () {
+        $.ajax({
+            url: '/Expense/VehicleMaintance',
+            success: function (partialView) {
+                $('#MaintanceVeh').append(partialView);
+                var count = 1;
+                $('.Maintance_Price').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.Maintance_Description').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.ErrMaintance_Price').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.ErrMaintance_Date').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.Maintance_Date').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+            }
+        });
+    });
+
     function PreSave() {
         var validform = true;
         if ($("#BuiltyNo").val() == '') {
@@ -148,7 +192,9 @@
             Model.TotalFare = parseFloat($("#TotalFare").val().replace(/,/g, ''));
             Model.TotalExpense = parseFloat($("#TotalExpense").val().replace(/,/g, ''));
             Model.TotalIncome = parseFloat($("#TotalIncome").val().replace(/,/g, ''));
+            Model.TotalMaintance = parseFloat($("#TotalMaintance").val().replace(/,/g, ''));
             Model.Expenses = [];
+            Model.Vehicles = [];
             var count = 1;
             $('.Amount').each(function () {
                 var ExpenseType = {};
@@ -156,6 +202,15 @@
                 ExpenseType.Amount = parseFloat($("#Amount-" + count).val().replace(/,/g, ''));
                 ExpenseType.Expense_Date = $("#Expense_Date-" + count).val();
                 Model.Expenses.push(ExpenseType);
+                count++;
+            });
+
+            $(".Maintance_Price").each(function () {
+                var VchMaintance = {};
+                VchMaintance.Maintance_Description = parseInt($("#Maintance_Description-" + count).val());
+                VchMaintance.Maintance_Price = parseFloat($("#Maintance_Price-" + count).val());
+                VchMaintance.Maintance_Date = $("#Maintance_Date-" + count).val();
+                Model.Vehicles.push(VchMaintance);
                 count++;
             });
             $.ajax({
@@ -206,9 +261,12 @@
         if (isNaN(TotalExpense)) {
             TotalExpense = 0;
         }
-        result = TotalFare - TotalExpense;
+        var TotalMaintance = parseFloat($("#TotalMaintance").val().replace(/,/g, ''));
+        if (isNaN(TotalMaintance)) {
+            TotalMaintance = 0;
+        }
+        result = TotalFare - TotalExpense - TotalMaintance;
         var formattedAmount = formatAmountWithCommas(result);
-        // $('#TotalIncome').val(result.toFixed(2));
         $('#TotalIncome').val(formattedAmount);
     }
 
@@ -228,12 +286,33 @@
         $('#TotalExpense').val(formattedAmount);
         CalculateTotalIncome();
     }
+    function CalculateTotalMaintanceAmount() {
+        var sum = 0;
+        $('.Maintance_Price').each(function () {
+            var val = parseFloat($(this).val().replace(/,/g, ''));
+            if (!isNaN(val) && val >= 0) {
+                sum += val;
+            }
+            else {
+                $(this).val(0)
+            }
+        });
+        var formattedAmount = formatAmountWithCommas(sum);
+        $('#TotalMaintance').val(formattedAmount);
+        CalculateTotalIncome();
+    }
 
     $(document).on('input', '.Amount', function () {
         var inputAmount = $(this).val().replace(/[^0-9.]/g, '');
         var formattedAmount = formatAmount(inputAmount);
         $(this).val(formattedAmount);
         CalculateTotalExpenseTypeAmount();
+    });
+    $(document).on('input', '.Maintance_Price', function () {
+        var inputAmount = $(this).val().replace(/[^0-9.]/g, '');
+        var formattedAmount = formatAmount(inputAmount);
+        $(this).val(formattedAmount);
+        CalculateTotalMaintanceAmount();
     });
 
     function formatAmount(amount) {
@@ -270,6 +349,10 @@
         UpdateIdValuesDynamically();
     });
 
+    $('#MaintanceVeh').on('click', '.DeleteVehicleMaintanceTypes', function () {
+        $(this).closest('#VehicleMaintanceTypes').remove();
+        CalculateTotalMaintanceAmount();
+    });
     $("#Back").click(function () {
         window.location.href = '/Expense/Index';
     });

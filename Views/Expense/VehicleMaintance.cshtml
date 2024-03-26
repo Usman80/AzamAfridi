@@ -1,0 +1,25 @@
+﻿@model Vehicle_Maintance
+<div class="row" id="VehicleMaintanceTypes">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Maintance Description:</label>
+            <input type="text" class="form-control Maintance_Description" id="Maintance_Description-1" value="@Model.Maintance_Description" placeholder="Enter Description">
+            <label id="ErrMaintance_Description" style="color:red;"></label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="Maintance_Price">Amount:</label>
+        <input class="form-control Maintance_Price" id="Maintance_Price-1" value="@((Model.Maintance_Price != null && Model.Maintance_Price != 0) ? Model.Maintance_Price.ToString() : "")" placeholder="Enter Maintance Amount">
+        <input type="hidden" value="@Model.VehicleMaintanceId" id="VehicleMaintanceId-1" class="VehicleMaintanceId" />
+        <label id="ErrMaintance_Price-1" class="ErrMaintance_Price" style="color:red;"></label>
+    </div>
+    <div class="col-md-2">
+        <label for="Maintance_Date">Date:</label>
+        <input type="date" class="form-control Maintance_Date" id="Maintance_Date-1" value="@Model.Maintance_Date">
+        <input type="hidden" value="@Model.VehicleMaintanceId" id="VehicleMaintanceId-1" class="VehicleMaintanceId" />
+        <label id="ErrMaintance_Date-1" class="ErrMaintance_Date" style="color:red;"></label>
+    </div>
+    <div class="col-md-2">
+        <i class="fa fa-trash-o DeleteVehicleMaintanceTypes" id="DeleteVehicleMaintanceTypes" style="font-size: 48px;color:red;margin-top: 24px;"></i>
+    </div>
+</div>
