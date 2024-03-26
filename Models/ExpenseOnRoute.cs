@@ -8,7 +8,7 @@ namespace AzamAfridi.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ExpenseOnRouteID { get; set; }
-        
+
         [ForeignKey("RouteID")]
         public virtual int RouteID { get; set; }
         public virtual RouteDetail RouteDetail { get; set; }
@@ -18,5 +18,7 @@ namespace AzamAfridi.Models
         public virtual ExpenseType ExpenseType { get; set; }
 
         public double Amount { get; set; }
+
+        public DateTime Expense_Date { get; set; }
     }
 }

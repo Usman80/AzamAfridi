@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AzamAfridi.Migrations.AppDbContextIdentityMigrations
 {
     /// <inheritdoc />
-    public partial class AddIdentityColumnToDb : Migration
+    public partial class InitalMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

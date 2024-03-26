@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzamAfridi.Migrations.AppDbContextIdentityMigrations
 {
     [DbContext(typeof(AppDbContextIdentity))]
-    [Migration("20240326151338_AddIdentityColumnToDb")]
-    partial class AddIdentityColumnToDb
+    [Migration("20240326184814_InitalMigration")]
+    partial class InitalMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

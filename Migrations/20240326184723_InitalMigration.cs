@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AzamAfridi.Migrations
 {
     /// <inheritdoc />
-    public partial class DatabaseTableCreation : Migration
+    public partial class InitalMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,6 @@ namespace AzamAfridi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ExpenseTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpenseTypeDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Expense_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsExpenseType = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -83,7 +82,8 @@ namespace AzamAfridi.Migrations
                     RouteDetailRouteID = table.Column<int>(type: "int", nullable: false),
                     RouteDetailBuiltyNo = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ExpenseTypeId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<double>(type: "float", nullable: false)
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    Expense_Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,14 +102,38 @@ namespace AzamAfridi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Maintance_Vehicles",
+                columns: table => new
+                {
+                    VehicleMaintanceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RouteID = table.Column<int>(type: "int", nullable: false),
+                    RouteDetailRouteID = table.Column<int>(type: "int", nullable: false),
+                    RouteDetailBuiltyNo = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Maintance_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Maintance_Price = table.Column<double>(type: "float", nullable: false),
+                    Maintance_Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Maintance_Vehicles", x => x.VehicleMaintanceId);
+                    table.ForeignKey(
+                        name: "FK_Maintance_Vehicles_RouteDetails_RouteDetailRouteID_RouteDetailBuiltyNo",
+                        columns: x => new { x.RouteDetailRouteID, x.RouteDetailBuiltyNo },
+                        principalTable: "RouteDetails",
+                        principalColumns: new[] { "RouteID", "BuiltyNo" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "ExpenseTypes",
-                columns: new[] { "ExpenseTypeId", "ExpenseTypeCode", "ExpenseTypeDescription", "Expense_Date", "IsExpenseType" },
+                columns: new[] { "ExpenseTypeId", "ExpenseTypeCode", "ExpenseTypeDescription", "IsExpenseType" },
                 values: new object[,]
                 {
-                    { 1, "Diesel-Lit", "Diesel Litter", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 2, "Fix-Chrg", "Fixed Charges", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 3, "TollTax", "Toll Tax", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false }
+                    { 1, "Diesel-Lit", "Diesel Litter", false },
+                    { 2, "Fix-Chrg", "Fixed Charges", false },
+                    { 3, "TollTax", "Toll Tax", false }
                 });
 
             migrationBuilder.InsertData(
@@ -136,6 +160,11 @@ namespace AzamAfridi.Migrations
                 name: "IX_ExpenseOnRoutes_RouteDetailRouteID_RouteDetailBuiltyNo",
                 table: "ExpenseOnRoutes",
                 columns: new[] { "RouteDetailRouteID", "RouteDetailBuiltyNo" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Maintance_Vehicles_RouteDetailRouteID_RouteDetailBuiltyNo",
+                table: "Maintance_Vehicles",
+                columns: new[] { "RouteDetailRouteID", "RouteDetailBuiltyNo" });
         }
 
         /// <inheritdoc />
@@ -143,6 +172,9 @@ namespace AzamAfridi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ExpenseOnRoutes");
+
+            migrationBuilder.DropTable(
+                name: "Maintance_Vehicles");
 
             migrationBuilder.DropTable(
                 name: "StationNames");

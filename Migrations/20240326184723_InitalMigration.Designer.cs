@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzamAfridi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240326151224_DatabaseTableCreation")]
-    partial class DatabaseTableCreation
+    [Migration("20240326184723_InitalMigration")]
+    partial class InitalMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,9 @@ namespace AzamAfridi.Migrations
 
                     b.Property<int>("ExpenseTypeId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Expense_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RouteDetailBuiltyNo")
                         .IsRequired()
@@ -74,9 +77,6 @@ namespace AzamAfridi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Expense_Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsExpenseType")
                         .HasColumnType("bit");
 
@@ -90,7 +90,6 @@ namespace AzamAfridi.Migrations
                             ExpenseTypeId = 1,
                             ExpenseTypeCode = "Diesel-Lit",
                             ExpenseTypeDescription = "Diesel Litter",
-                            Expense_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsExpenseType = false
                         },
                         new
@@ -98,7 +97,6 @@ namespace AzamAfridi.Migrations
                             ExpenseTypeId = 2,
                             ExpenseTypeCode = "Fix-Chrg",
                             ExpenseTypeDescription = "Fixed Charges",
-                            Expense_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsExpenseType = false
                         },
                         new
@@ -106,7 +104,6 @@ namespace AzamAfridi.Migrations
                             ExpenseTypeId = 3,
                             ExpenseTypeCode = "TollTax",
                             ExpenseTypeDescription = "Toll Tax",
-                            Expense_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsExpenseType = false
                         });
                 });
@@ -263,6 +260,41 @@ namespace AzamAfridi.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AzamAfridi.Models.Vehicle_Maintance", b =>
+                {
+                    b.Property<int>("VehicleMaintanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleMaintanceId"));
+
+                    b.Property<DateTime>("Maintance_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Maintance_Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Maintance_Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("RouteDetailBuiltyNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RouteDetailRouteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RouteID")
+                        .HasColumnType("int");
+
+                    b.HasKey("VehicleMaintanceId");
+
+                    b.HasIndex("RouteDetailRouteID", "RouteDetailBuiltyNo");
+
+                    b.ToTable("Maintance_Vehicles");
+                });
+
             modelBuilder.Entity("AzamAfridi.Models.ExpenseOnRoute", b =>
                 {
                     b.HasOne("AzamAfridi.Models.ExpenseType", "ExpenseType")
@@ -282,9 +314,22 @@ namespace AzamAfridi.Migrations
                     b.Navigation("RouteDetail");
                 });
 
+            modelBuilder.Entity("AzamAfridi.Models.Vehicle_Maintance", b =>
+                {
+                    b.HasOne("AzamAfridi.Models.RouteDetail", "RouteDetail")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("RouteDetailRouteID", "RouteDetailBuiltyNo")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RouteDetail");
+                });
+
             modelBuilder.Entity("AzamAfridi.Models.RouteDetail", b =>
                 {
                     b.Navigation("Expenses");
+
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }

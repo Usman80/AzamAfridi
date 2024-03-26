@@ -12,8 +12,6 @@ namespace AzamAfridi.Models
         public string ExpenseTypeCode { get; set; }
         [Required]
         public string ExpenseTypeDescription { get; set; }
-        [Required]
-        public DateTime Expense_Date { get; set; }
         public bool IsExpenseType {  get; set; }
     }
 }

@@ -40,5 +40,6 @@ namespace AzamAfridi.Models
         public double TotalIncome       { get; set; }
         public bool Isbuilty {  get; set; } 
         public List<ExpenseOnRoute> Expenses { get; set; }
+        public List<Vehicle_Maintance> Vehicles { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace AzamAfridi.Controllers
         {
                 _db = db;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _db.RouteDetails.ToList();
+            var list = await _db.RouteDetails.ToListAsync();
             return View(list);
         }
 
@@ -49,7 +49,6 @@ namespace AzamAfridi.Controllers
 
             ViewData["ExpenseTypeDDL"] = new SelectList(expensetype, "Code", "Description");
 
-            //PopulateStationName();
             if(Model != null && Model.ExpenseOnRouteID >= 1)
             {
                 var ViewModel = _db.ExpenseOnRoutes.Where(x => x.ExpenseOnRouteID == Model.ExpenseOnRouteID).FirstOrDefault();
@@ -61,6 +60,21 @@ namespace AzamAfridi.Controllers
             Model = new ExpenseOnRoute();
             return PartialView(Model);
         }
+
+        public async Task<IActionResult> VehicleMaintance(Vehicle_Maintance Model)
+        {
+            if (Model != null && Model.VehicleMaintanceId >= 1)
+            {
+                var ViewModel = await _db.Maintance_Vehicles.Where(x => x.VehicleMaintanceId== Model.VehicleMaintanceId).FirstOrDefaultAsync();
+                if (ViewModel != null && ViewModel.VehicleMaintanceId > 0)
+                {
+                    return PartialView(ViewModel);
+                }
+            }
+            Model = new Vehicle_Maintance();
+            return PartialView(Model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveBuilty(RouteDetail Model)
         {
@@ -68,12 +82,12 @@ namespace AzamAfridi.Controllers
             {
                 return Json(new { isSaved = false});
             }
-            var isAlreadyExist = _db.RouteDetails.Where(x => x.BuiltyNo == Model.BuiltyNo).FirstOrDefault();
+            var isAlreadyExist = await _db.RouteDetails.Where(x => x.BuiltyNo == Model.BuiltyNo).FirstOrDefaultAsync();
             if(isAlreadyExist != null && !string.IsNullOrEmpty(isAlreadyExist.BuiltyNo))
             {
                 return Json(new { isSaved = false, isAlreadyExist = true });
             }
-            var RouteId =  _db.RouteDetails.Add(Model);
+            var RouteId = await  _db.RouteDetails.AddAsync(Model); 
             _db.SaveChanges();
             return Json(new { isSaved = true });
         }
@@ -92,12 +106,12 @@ namespace AzamAfridi.Controllers
             ViewData["ExpenseTypeDDL"] = new SelectList(expensetype, "Code", "Description");
             if(!string.IsNullOrEmpty(builtyNo))
             {
-                var Model = _db.RouteDetails.Where(x => x.BuiltyNo == builtyNo).FirstOrDefault();
+                var Model = await _db.RouteDetails.Where(x => x.BuiltyNo == builtyNo).FirstOrDefaultAsync();
                 if (Model != null)
                 {
                     if(Model.Expenses== null)
                     {
-                        var lstExpenseOnRoute = _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToList();
+                        var lstExpenseOnRoute = await _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToListAsync();
                         Model.Expenses = new List<ExpenseOnRoute>();
                         Model.Expenses = lstExpenseOnRoute;
                     }
@@ -117,7 +131,7 @@ namespace AzamAfridi.Controllers
             {
                 return Json(new { isSaved = false });
             }
-            var isAlreadyExist = _db.Set<RouteDetail>().SingleOrDefault(s => s.RouteID == Model.RouteID);
+            var isAlreadyExist = await _db.Set<RouteDetail>().SingleOrDefaultAsync(s => s.RouteID == Model.RouteID);
             //var isAlreadyExist = _db.RouteDetails.Where(x => x.RouteID == Model.RouteID).FirstOrDefault();
             if (isAlreadyExist != null && !string.IsNullOrEmpty(isAlreadyExist.BuiltyNo))
             {
@@ -139,7 +153,7 @@ namespace AzamAfridi.Controllers
                 isAlreadyExist.TotalIncome = Model.TotalIncome;
                 if (isAlreadyExist.Expenses == null)
                 {
-                    var lstExpenseOnRoute = _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToList();
+                    var lstExpenseOnRoute = await _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToListAsync();
                     isAlreadyExist.Expenses = new List<ExpenseOnRoute>();
                     isAlreadyExist.Expenses = lstExpenseOnRoute;
                 }
@@ -174,10 +188,10 @@ namespace AzamAfridi.Controllers
                 {
                     foreach(var data in isAlreadyExist.Expenses)
                     {
-                        _db.ExpenseOnRoutes.Add(data);
+                       await _db.ExpenseOnRoutes.AddAsync(data);
                     }
                 }
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return Json(new { isSaved = true });
             }
             else
@@ -187,9 +201,9 @@ namespace AzamAfridi.Controllers
         }
 
         [NonAction]
-        public void PopulateStationName()
+        private async void PopulateStationName()
         {
-            var StationDLL = _db.StationNames.ToList();
+            var StationDLL = await _db.StationNames.ToListAsync();
             StationName stationName = new StationName() { StationId = 0, StationDescription = "Choose a Category" };
             StationDLL.Insert(0, stationName);
             ViewData["StationNameDLL"] = StationDLL; 

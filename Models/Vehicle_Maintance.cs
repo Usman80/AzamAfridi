@@ -7,7 +7,7 @@ namespace AzamAfridi.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int VehicleMaintance { get; set; }
+        public int VehicleMaintanceId { get; set; }
         [ForeignKey("RouteID")]
         public virtual int RouteID { get; set; }
         public virtual RouteDetail RouteDetail { get; set; }
