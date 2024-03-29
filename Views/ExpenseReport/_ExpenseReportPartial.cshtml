@@ -5,6 +5,8 @@
         {
             int recordNumber = 1;
             decimal TotalIncome = 0;
+            decimal TotalMaintance = 0;
+            decimal TotalNetProfit = 0;
             foreach (var combineModel in Model)
             {
                 foreach (var routedetail in combineModel.RouteDetails)
@@ -18,10 +20,18 @@
                                             <i class="fas fa-globe"></i> Azam Afridi, Pvt Ltd.
                                             <small class="float-right">Trip# @recordNumber</small>
                                         </h4>
-                                        @* Increment the record number counter *@
                                         @{
                                             recordNumber++;
                                             TotalIncome = routedetail.TotalIncome + TotalIncome;
+                                            TotalMaintance = routedetail.TotalMaintance + TotalMaintance;
+                                            @if(TotalMaintance == 0)
+                                            {
+                                                TotalNetProfit = TotalIncome;
+                                            }
+                                            else
+                                            {
+                                                TotalNetProfit = TotalIncome - TotalMaintance;
+                                            }
                                         }
                                     </div>
                                 </div>
@@ -29,16 +39,16 @@
                                     <div class="col-sm-6 invoice-col">
                                         From
                                         <br />
-                                        <b>Date:</b> @routedetail.StartDate<br />
-                                        <b>Station:</b>@routedetail.FromStation - @routedetail.ToStation<br />
+                                        <b>Date:</b> @routedetail.StartDate.ToString("dd/MM/yyyy")<br />
+                                        <b>Station:</b> @routedetail.FromStation - @routedetail.ToStation<br />
                                         <b>Wazan:</b> @routedetail.Weight<br />
                                         <b>Karaya:</b> @routedetail.FromFare.ToString("N0")<br />
                                     </div>
                                     <div class="col-sm-6 invoice-col">
                                         Return Trip
                                         <br />
-                                        <b>Date:</b> @routedetail.ReturnDate<br />
-                                        <b>Station:</b>@routedetail.ReturnFromStation - @routedetail.ReturnToStation<br />
+                                        <b>Date:</b> @routedetail.ReturnDate.ToString("dd/MM/yyyy")<br />
+                                        <b>Station:</b> @routedetail.ReturnFromStation - @routedetail.ReturnToStation<br />
                                         <b>Wazan:</b> @routedetail.ReturnWeight<br />
                                         <b>Karaya:</b> @routedetail.ToFare.ToString("N0")<br />
                                     </div>
@@ -50,6 +60,7 @@
                                                 <tr>
                                                     <th>Expense Description</th>
                                                     <th>Amount</th>
+                                                    <th>Expense Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -58,12 +69,39 @@
                                                     <tr>
                                                         <td>@expense.ExpenseTypeDescription</td>
                                                         <td>@expense.ExpenseAmount.ToString("N0")</td>
+                                                        <td>@expense.Expense_Date.ToString("dd/MM/yyyy")</td>
                                                     </tr>
                                                 }
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+                                @if (combineModel.vch_mant.Count() > 0)
+                                {
+                                    <div class="row">
+                                        <div class="col-12 table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Maintance Description</th>
+                                                        <th>Amount</th>
+                                                        <th>Maintance Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var maintance in combineModel.vch_mant)
+                                                    {
+                                                        <tr>
+                                                            <td>@maintance.Maintance_Description</td>
+                                                            <td>@maintance.Maintance_Price.ToString("N0")</td>
+                                                            <td>@maintance.Maintance_Date.ToString("dd/MM/yyyy")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
@@ -77,6 +115,10 @@
                                                     <td>@routedetail.TotalExpense.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
+                                                    <th>Total Maintance:</th>
+                                                    <td>@routedetail.TotalMaintance.ToString("N0")</td>
+                                                </tr>
+                                                <tr>
                                                     <th>Total Trip Income:</th>
                                                     <td>@routedetail.TotalIncome.ToString("N0")</td>
                                                 </tr>
@@ -84,11 +126,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row no-print">
-                                    <div class="col-12">
-                                        <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                                    </div>
-                                </div>
+                                @* <div class="row no-print">
+                    <div class="col-12">
+                    <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                    </div>
+                    </div> *@
                             </div>
                         </div>
                     </div>
@@ -101,6 +143,10 @@
                             <div class="col-sm-6 invoice-col">
                                 <br />
                                 <b>Total Truck Income:</b> @TotalIncome.ToString("N0")
+                                <br />
+                                <b>Total Maintance Cost:</b> @TotalMaintance.ToString("N0")
+                                <br />
+                                <b>Total Net Income:</b> @TotalNetProfit.ToString("N0")
                             </div>
                         </div>
                     </div>

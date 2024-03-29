@@ -5,5 +5,6 @@
         public string ExpenseTypeDescription { get; set; }
         public decimal ExpenseAmount { get; set; }
         public string RouteDetailBuiltyNo { get; set; }
+        public DateTime Expense_Date { get; set; }  
     }
 }

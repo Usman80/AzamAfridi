@@ -1,4 +1,7 @@
-﻿<section class="content-header">
+﻿<head>
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+</head>
+<section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-12">
@@ -13,22 +16,29 @@
 </section>
 <section class="content">
     <div class="container-fluid">
-        @* <h2 class="text-center display-4">Expense R</h2> *@
         <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="input-group">
-                    <input type="search" class="form-control form-control-lg" id="truckNoInput" placeholder="Enter Truck No">
-                    <div class="input-group-append">
-                        <button type="submit" id="loadReportBtn" class="btn btn-lg btn-default">
+            <div class="col-md-10 offset-md-1">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="input-group">
+                            <input type="search" class="form-control form-control-lg" id="truckNoInput" placeholder="Enter Truck No">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <input type="date" class="form-control form-control-lg" id="Start_Date">
+                    </div>
+                    <div class="col-3">
+                        <input type="date" class="form-control form-control-lg" id="End_Date">
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" id="loadReportBtn" class="btn btn-primary btn-flat">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
                 <div class="row mt-3">
-                    @*                     <div class="col-md-10 offset-md-1"> *@
                     <div class="col-md-12">
                         <div id="reportContainer"></div>
-                        @*  </div> *@
                     </div>
                 </div>
             </div>

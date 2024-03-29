@@ -1,4 +1,5 @@
-﻿@model List<RouteDetail>
+﻿@using AzamAfridi.Utility
+@model List<RouteDetail>
 
 <script>
     $(document).ready(function () {
@@ -22,64 +23,79 @@
 </div>
 @* <section class="content">
     <div class="container-fluid"> *@
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Builty Details</h3>
-                        <button type="button" class="btn btn-primary btn-flat" style="margin-left: 1000px;" id="CreateBuilty">Create Builty</button>
-                    </div>
-                    @if (Model != null && Model.Count() > 0)
-                    {
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="RouteDetails" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Builty No</th>
-                                        <th>Driver Name</th>
-                                        <th>Truck No</th>
-                                        <th>Date</th>
-                                        <th>Weight</th>
-                                        <th>From Station</th>
-                                        <th>To Station</th>
-                                        <th>From-Fare</th>
-                                        <th>To-Fare</th>
-                                        <th>Total Fare</th>
-                                        <th>Total Expense</th>
-                                        <th>Total Income</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var data in Model)
-                                    {
-                                        <tr>
-                                            <td>@data.BuiltyNo</td>
-                                            <td>@data.DriveName</td>
-                                            <td>@data.TruckNo</td>
-                                            <td>@data.Start_Date.Date.ToString("dd/MM/yyyy")</td>
-                                            <td>@data.Weight</td>
-                                            <td>@data.FromStation</td>
-                                            <td>@data.ToStation</td>
-                                            <td>@data.FromFare</td>
-                                            <td>@data.ToFare</td>
-                                            <td>@data.TotalFare</td>
-                                            <td>@data.TotalExpense</td>
-                                            <td>@data.TotalIncome</td>
-                                            <td><a href="@Url.Action("Edit", "Expense", new { builtyNo = data.BuiltyNo })">Edit</a></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    }
-                </div>
-                <!-- /.card -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Builty Details</h3>
+                <button type="button" class="btn btn-primary btn-flat" style="margin-left: 1000px;" id="CreateBuilty">Create Builty</button>
             </div>
-            <!-- /.col -->
+            @if (Model != null && Model.Count() > 0)
+            {
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="RouteDetails" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Builty No</th>
+                                <th>Driver Name</th>
+                                <th>Truck No</th>
+                                <th>Date</th>
+                                <th>Weight</th>
+                                <th>From Station</th>
+                                <th>To Station</th>
+                                <th>From-Fare</th>
+                                <th>To-Fare</th>
+                                <th>Total Fare</th>
+                                <th>Total Expense</th>
+                                <th>Total Income</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var data in Model)
+                            {
+                                <tr>
+                                    <td>@data.BuiltyNo</td>
+                                    <td>@data.DriveName</td>
+                                    <td>@data.TruckNo</td>
+                                    <td>@data.Start_Date.Date.ToString("dd/MM/yyyy")</td>
+                                    <td>@data.Weight</td>
+                                    <td>@data.FromStation</td>
+                                    <td>@data.ToStation</td>
+                                    <td>@data.FromFare.ToString("N0")</td>
+                                    <td>@data.ToFare.ToString("N0")</td>
+                                    <td>@data.TotalFare.ToString("N0")</td>
+                                    <td>@data.TotalExpense.ToString("N0")</td>
+                                    <td>@data.TotalIncome.ToString("N0")</td>
+                                    @if (User.IsInRole(SD.RoleAdmin) && data.Isbuilty == false)
+                                    {
+                                        <td>
+                                            @* <a href="@Url.Action("DeleteExpense", "Expense", new { builtyNo = data.BuiltyNo })">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </a> *@
+                                            <button type="button" class="btn btn-danger" onclick="deleteExpense('@data.BuiltyNo')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            }
         </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
 @*     </div>
 </section> *@
 <script>
@@ -91,4 +107,6 @@
             }).buttons().container().appendTo('#RouteDetails_wrapper .col-md-6:eq(0)');
         });
     });
+
+    
 </script>

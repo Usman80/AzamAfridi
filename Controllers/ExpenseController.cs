@@ -13,7 +13,7 @@ namespace AzamAfridi.Controllers
         private readonly AppDbContext _db;
         public ExpenseController(AppDbContext db)
         {
-                _db = db;
+            _db = db;
         }
         public async Task<IActionResult> Index()
         {
@@ -49,7 +49,7 @@ namespace AzamAfridi.Controllers
 
             ViewData["ExpenseTypeDDL"] = new SelectList(expensetype, "Code", "Description");
 
-            if(Model != null && Model.ExpenseOnRouteID >= 1)
+            if (Model != null && Model.ExpenseOnRouteID >= 1)
             {
                 var ViewModel = _db.ExpenseOnRoutes.Where(x => x.ExpenseOnRouteID == Model.ExpenseOnRouteID).FirstOrDefault();
                 if (ViewModel != null && ViewModel.ExpenseOnRouteID > 0)
@@ -65,7 +65,7 @@ namespace AzamAfridi.Controllers
         {
             if (Model != null && Model.VehicleMaintanceId >= 1)
             {
-                var ViewModel = await _db.Maintance_Vehicles.Where(x => x.VehicleMaintanceId== Model.VehicleMaintanceId).FirstOrDefaultAsync();
+                var ViewModel = await _db.Maintance_Vehicles.Where(x => x.VehicleMaintanceId == Model.VehicleMaintanceId).FirstOrDefaultAsync();
                 if (ViewModel != null && ViewModel.VehicleMaintanceId > 0)
                 {
                     return PartialView(ViewModel);
@@ -78,16 +78,16 @@ namespace AzamAfridi.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveBuilty(RouteDetail Model)
         {
-            if(string.IsNullOrEmpty(Model.BuiltyNo))
+            if (string.IsNullOrEmpty(Model.BuiltyNo))
             {
-                return Json(new { isSaved = false});
+                return Json(new { isSaved = false });
             }
             var isAlreadyExist = await _db.RouteDetails.Where(x => x.BuiltyNo == Model.BuiltyNo).FirstOrDefaultAsync();
-            if(isAlreadyExist != null && !string.IsNullOrEmpty(isAlreadyExist.BuiltyNo))
+            if (isAlreadyExist != null && !string.IsNullOrEmpty(isAlreadyExist.BuiltyNo))
             {
                 return Json(new { isSaved = false, isAlreadyExist = true });
             }
-            var RouteId = await  _db.RouteDetails.AddAsync(Model); 
+            var RouteId = await _db.RouteDetails.AddAsync(Model);
             _db.SaveChanges();
             return Json(new { isSaved = true });
         }
@@ -104,12 +104,12 @@ namespace AzamAfridi.Controllers
                 .ToListAsync();
 
             ViewData["ExpenseTypeDDL"] = new SelectList(expensetype, "Code", "Description");
-            if(!string.IsNullOrEmpty(builtyNo))
+            if (!string.IsNullOrEmpty(builtyNo))
             {
                 var Model = await _db.RouteDetails.Where(x => x.BuiltyNo == builtyNo).FirstOrDefaultAsync();
                 if (Model != null)
                 {
-                    if(Model.Expenses== null)
+                    if (Model.Expenses == null)
                     {
                         var lstExpenseOnRoute = await _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToListAsync();
                         Model.Expenses = new List<ExpenseOnRoute>();
@@ -157,13 +157,13 @@ namespace AzamAfridi.Controllers
                     isAlreadyExist.Expenses = new List<ExpenseOnRoute>();
                     isAlreadyExist.Expenses = lstExpenseOnRoute;
                 }
-                if(isAlreadyExist.Expenses != null && isAlreadyExist.Expenses.Count()>0)
+                if (isAlreadyExist.Expenses != null && isAlreadyExist.Expenses.Count() > 0)
                 {
                     //Update Old Records
-                    foreach(var expense in isAlreadyExist.Expenses)
+                    foreach (var expense in isAlreadyExist.Expenses)
                     {
                         var updateExpense = Model.Expenses.Where(x => x.ExpenseOnRouteID == expense.ExpenseOnRouteID).FirstOrDefault();
-                        if(updateExpense != null)
+                        if (updateExpense != null)
                         {
                             expense.ExpenseType = updateExpense.ExpenseType;
                             expense.RouteDetail = updateExpense.RouteDetail;
@@ -174,7 +174,7 @@ namespace AzamAfridi.Controllers
                         }
                     }
                     //Add New Records
-                    if(Model.Expenses != null && Model.Expenses.Count()>0)
+                    if (Model.Expenses != null && Model.Expenses.Count() > 0)
                     {
                         foreach (var expense in Model.Expenses)
                         {
@@ -184,11 +184,11 @@ namespace AzamAfridi.Controllers
                     }
                 }
                 _db.Update(isAlreadyExist);
-                if(isAlreadyExist.Expenses != null && isAlreadyExist.Expenses.Count() > 0)
+                if (isAlreadyExist.Expenses != null && isAlreadyExist.Expenses.Count() > 0)
                 {
-                    foreach(var data in isAlreadyExist.Expenses)
+                    foreach (var data in isAlreadyExist.Expenses)
                     {
-                       await _db.ExpenseOnRoutes.AddAsync(data);
+                        await _db.ExpenseOnRoutes.AddAsync(data);
                     }
                 }
                 await _db.SaveChangesAsync();
@@ -200,13 +200,27 @@ namespace AzamAfridi.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DeleteExpense(string builtyNo)
+        {
+            var Model = await _db.RouteDetails.Where(x => x.BuiltyNo == builtyNo).FirstOrDefaultAsync();
+            if (Model != null)
+            {
+                Model.Isbuilty = true;
+                _db.Update(Model);
+                await _db.SaveChangesAsync();
+                return Json(new { isSaved = true });
+            }
+            return Json(new { isSaved = false });
+        }
+
         [NonAction]
         private async void PopulateStationName()
         {
             var StationDLL = await _db.StationNames.ToListAsync();
             StationName stationName = new StationName() { StationId = 0, StationDescription = "Choose a Category" };
             StationDLL.Insert(0, stationName);
-            ViewData["StationNameDLL"] = StationDLL; 
+            ViewData["StationNameDLL"] = StationDLL;
         }
     }
 }

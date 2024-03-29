@@ -13,6 +13,102 @@
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    $("#Return_Date").on('blur', function () {
+        if ($("#Start_Date").val() == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Enter Start Date First"
+            });
+            $("#Return_Date").val("");
+        }
+        else if ($("#Return_Date").val() < $("#Start_Date").val()) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Return Date Cannot be Less than Start Date"
+            });
+            $("#Return_Date").val("");
+        }
+    });
+
+    $("#Start_Date").on('change', function () {
+        if ($("#Return_Date").val() != "") {
+            $("#Return_Date").val("");
+        }
+    });
+    //function isDateBetween(startDate, endDate, targetDate) {
+    //    return startDate <= targetDate && targetDate <= endDate;
+    //}
+
+    //$(".Expense_Date").on('change', function ()
+    //{
+    //    if ($("#Start_Date").val() == "")
+    //    {
+    //        Swal.fire({
+    //            icon: "error",
+    //            title: "Oops...",
+    //            text: "Enter Start Date First!"
+    //        });
+    //    }
+    //    else if ($("#Return_Date").val() == "") {
+    //        Swal.fire({
+    //            icon: "error",
+    //            title: "Oops...",
+    //            text: "Enter Return Date First!"
+    //        });
+    //    }
+    //    if (isDateBetween($("#Start_Date").val(), $("#Return_Date").val(), $(".Expense_Date").val())) {
+    //    } else {
+    //        Swal.fire({
+    //            icon: "error",
+    //            title: "Oops...",
+    //            text: "Expense Date Should be In Between Start Date & Return Date"
+    //        });
+    //        $(".Expense_Date").val("");
+    //    }
+    //});
+
+    $(document).on('blur', '.Expense_Date', function () {
+        var rowId = $(this).closest('.Expense_Date').attr('id');
+        var result = rowId.split('-');
+        if ($("#Start_Date").val() == "" || $("#Return_Date").val() == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Enter Start Date & Return Date!"
+            });
+        }
+        else {
+            var expenseDate = $(this).val();
+            var startDate = $('#Start_Date').val();
+            var endDate = $('#Return_Date').val();
+
+            if (expenseDate >= startDate && expenseDate <= endDate) {
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Should be Between Start Date & Return Date"
+                });
+                $(this).val("");
+                $("#Amount-" + result[1]).val("");
+            }
+        }
+    });
+    function checkDivContent() {
+        var hasData = false;
+        $('#VehicleMaintanceTypes').find('input[type="text"], input[type="date"]').each(function () {
+            if ($(this).val().trim() !== '') {
+                hasData = true;
+                return false;
+            }
+        });
+
+        return hasData;
+    }
+
     $('#ToFare, #FromFare').on('keyup', function () {
         var amountInput = $(this).val().replace(/,/g, '');
         var amountPattern = /^\d+(\.\d{1,2})?$/;
@@ -85,20 +181,6 @@
                 });
                 count = 1;
                 $('.Maintance_Description').each(function () {
-                    if (this.id) {
-                        this.id = this.id.split('-')[0] + "-" + count;
-                        count++;
-                    }
-                });
-                count = 1;
-                $('.ErrMaintance_Price').each(function () {
-                    if (this.id) {
-                        this.id = this.id.split('-')[0] + "-" + count;
-                        count++;
-                    }
-                });
-                count = 1;
-                $('.ErrMaintance_Date').each(function () {
                     if (this.id) {
                         this.id = this.id.split('-')[0] + "-" + count;
                         count++;
@@ -204,15 +286,18 @@
                 Model.Expenses.push(ExpenseType);
                 count++;
             });
-
-            $(".Maintance_Price").each(function () {
-                var VchMaintance = {};
-                VchMaintance.Maintance_Description = parseInt($("#Maintance_Description-" + count).val());
-                VchMaintance.Maintance_Price = parseFloat($("#Maintance_Price-" + count).val());
-                VchMaintance.Maintance_Date = $("#Maintance_Date-" + count).val();
-                Model.Vehicles.push(VchMaintance);
-                count++;
-            });
+            var result = checkDivContent();
+            if (result == true) {
+                var count_Maint = 1;
+                $(".Maintance_Price").each(function () {
+                    var VchMaintance = {};
+                    VchMaintance.Maintance_Description = $("#Maintance_Description-" + count_Maint).val();
+                    VchMaintance.Maintance_Price = parseFloat($("#Maintance_Price-" + count_Maint).val().replace(/,/g, ''));
+                    VchMaintance.Maintance_Date = $("#Maintance_Date-" + count_Maint).val();
+                    Model.Vehicles.push(VchMaintance);
+                    count_Maint++;
+                });
+            }
             $.ajax({
                 url: "/Expense/SaveBuilty",
                 type: "Post",
@@ -299,7 +384,7 @@
         });
         var formattedAmount = formatAmountWithCommas(sum);
         $('#TotalMaintance').val(formattedAmount);
-        CalculateTotalIncome();
+        //CalculateTotalIncome();
     }
 
     $(document).on('input', '.Amount', function () {

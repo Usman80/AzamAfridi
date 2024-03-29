@@ -19,12 +19,13 @@ namespace AzamAfridi.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GenerateExpenseReport(string truckNo)
+        public async Task<IActionResult> GenerateExpenseReport(string truckNo,DateTime StartDate,DateTime EndDate)
         {
             var routeDetailsList = await (
             from rd in _db.RouteDetails
                 join sn in _db.StationNames on rd.FromStation equals sn.StationCode
-                where rd.TruckNo == truckNo
+                where rd.TruckNo == truckNo && ((rd.Start_Date>= StartDate && rd.Start_Date <=EndDate) || 
+                (rd.Return_Date>=StartDate && rd.Return_Date <=EndDate)) 
                 select new RouteDetailsModel
                 {
                     RouteID             = rd.RouteID,
@@ -43,7 +44,8 @@ namespace AzamAfridi.Controllers
                     ToFare              = Convert.ToDecimal(rd.ToFare),
                     TotalFare           = Convert.ToDecimal(rd.TotalFare),
                     TotalExpense        = Convert.ToDecimal(rd.TotalExpense),
-                    TotalIncome         = Convert.ToDecimal(rd.TotalIncome)
+                    TotalIncome         = Convert.ToDecimal(rd.TotalIncome),
+                    TotalMaintance      = Convert.ToDecimal(rd.TotalMaintance)
                 }
             ).ToListAsync();
             var combinedModelList = new List<CombinedModel>();
@@ -56,14 +58,27 @@ namespace AzamAfridi.Controllers
                     select new ExpenseModel
                     {
                         ExpenseTypeDescription = b.ExpenseTypeDescription,
-                        ExpenseAmount = Convert.ToDecimal(a.Amount)
+                        ExpenseAmount = Convert.ToDecimal(a.Amount),
+                        Expense_Date = a.Expense_Date
                     }
                 ).ToListAsync();
+
+                var vehicle_Maintaince = await (
+                    from a in _db.Maintance_Vehicles
+                    where a.RouteDetail.BuiltyNo.Contains(routeDetails.BuiltyNo) 
+                    select new Vehicle_MaintanceModel
+                    {
+                        Maintance_Description = a.Maintance_Description,
+                        Maintance_Price = Convert.ToDecimal(a.Maintance_Price),
+                        Maintance_Date = a.Maintance_Date
+                    }
+                ).ToListAsync();
+
                 var combinedModel = new CombinedModel
                 {
-                    //RouteDetails = routeDetails,
                     RouteDetails = new List<RouteDetailsModel> { routeDetails },
-                    Expenses = expenses
+                    Expenses = expenses,
+                    vch_mant = vehicle_Maintaince
                 };
                 combinedModelList.Add(combinedModel);
             }
