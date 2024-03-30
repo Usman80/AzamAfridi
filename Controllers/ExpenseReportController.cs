@@ -23,30 +23,30 @@ namespace AzamAfridi.Controllers
         {
             var routeDetailsList = await (
             from rd in _db.RouteDetails
-                join sn in _db.StationNames on rd.FromStation equals sn.StationCode
-                where rd.TruckNo == truckNo && ((rd.Start_Date>= StartDate && rd.Start_Date <=EndDate) || 
-                (rd.Return_Date>=StartDate && rd.Return_Date <=EndDate)) 
-                select new RouteDetailsModel
-                {
-                    RouteID             = rd.RouteID,
-                    BuiltyNo            = rd.BuiltyNo,
-                    DriveName           = rd.DriveName,
-                    TruckNo             = rd.TruckNo,
-                    StartDate           = rd.Start_Date,
-                    Weight              = rd.Weight,
-                    FromStation         = sn.StationDescription,
-                    ToStation           = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.ToStation).StationDescription,
-                    FromFare            = Convert.ToDecimal(rd.FromFare),
-                    ReturnDate          = rd.Return_Date,
-                    ReturnWeight        = rd.Return_Weight,
-                    ReturnFromStation   = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.Return_FromStation).StationDescription,
-                    ReturnToStation     = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.Return_ToStation).StationDescription,
-                    ToFare              = Convert.ToDecimal(rd.ToFare),
-                    TotalFare           = Convert.ToDecimal(rd.TotalFare),
-                    TotalExpense        = Convert.ToDecimal(rd.TotalExpense),
-                    TotalIncome         = Convert.ToDecimal(rd.TotalIncome),
-                    TotalMaintance      = Convert.ToDecimal(rd.TotalMaintance)
-                }
+            join sn in _db.StationNames on rd.FromStation equals sn.StationCode
+            where rd.TruckNo == truckNo && ((rd.Start_Date >= StartDate && rd.Start_Date <= EndDate) ||
+            (rd.Return_Date >= StartDate && rd.Return_Date <= EndDate)) && rd.Isbuilty == false
+            select new RouteDetailsModel
+            {
+                RouteID = rd.RouteID,
+                BuiltyNo = rd.BuiltyNo,
+                DriveName = rd.DriveName,
+                TruckNo = rd.TruckNo,
+                StartDate = rd.Start_Date,
+                Weight = rd.Weight,
+                FromStation = sn.StationDescription,
+                ToStation = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.ToStation).StationDescription,
+                FromFare = Convert.ToDecimal(rd.FromFare),
+                ReturnDate = rd.Return_Date,
+                ReturnWeight = rd.Return_Weight,
+                ReturnFromStation = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.Return_FromStation).StationDescription,
+                ReturnToStation = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.Return_ToStation).StationDescription,
+                ToFare = Convert.ToDecimal(rd.ToFare),
+                TotalFare = Convert.ToDecimal(rd.TotalFare),
+                TotalExpense = Convert.ToDecimal(rd.TotalExpense),
+                TotalIncome = Convert.ToDecimal(rd.TotalIncome),
+                TotalMaintance = Convert.ToDecimal(rd.TotalMaintance)
+            }
             ).ToListAsync();
             var combinedModelList = new List<CombinedModel>();
             foreach (var routeDetails in routeDetailsList)

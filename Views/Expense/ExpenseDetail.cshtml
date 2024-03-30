@@ -1,0 +1,201 @@
+﻿@model ExpenseDetailModel
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Builty</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a asp-action="Index" asp-controller="Expense" class="btn btn-info detail-btn float-right">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Route Detail</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Expense</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#maintance" data-toggle="tab">Maintance</a></li>
+                </ul>
+            </div>
+            @if (Model != null)
+            {
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="activity">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="BuiltyNo">Builty No:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.BuiltyNo, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="DriveName">Driver Name:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.DriveName, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="TruckNo">Truck No:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.TruckNo, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="Start_Date">Start Date:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.StartDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Weight">Weight:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.Weight, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="FromStation">From Station:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.FromStation, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="ToStation">To Station:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.ToStation, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="FromFare">Fare:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.FromFare, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Return_Date">Return Date:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.ReturnDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="Return_Weight">Weight:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.ReturnWeight, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Return_FromStation">From Station:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.ReturnFromStation, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Return_ToStation">To Station:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.ReturnToStation, new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="ToFare">To-Fare:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.ToFare, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="TotalFare">Total Fare:</label>
+                                    @Html.TextBoxFor(model => model.RouteDetails.TotalFare, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="TotalExpense">Total Expense:</label>
+                                        @Html.TextBoxFor(model => model.RouteDetails.TotalExpense, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="TotalIncome">Total Income:</label>
+                                        @Html.TextBoxFor(model => model.RouteDetails.TotalIncome, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="TotalIncome">Total Maintance:</label>
+                                        @Html.TextBoxFor(model => model.RouteDetails.TotalMaintance, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="timeline">
+                            <div class="timeline timeline-inverse">
+                                @foreach (var group in Model.Expenses.GroupBy(e => e.Expense_Date.Date))
+                                {
+                                    <div class="time-label">
+                                        <span class="bg-success">
+                                            @group.Key.ToString("dd MMM. yyyy")
+                                        </span>
+                                    </div>
+                                    @foreach (var item in group)
+                                    {
+                                        <div>
+                                            <i class="fas fa-receipt bg-green"></i>
+                                            <div class="timeline-item">
+                                                <span class="time"><i class="far fa-clock"></i> @($"{(DateTime.Now - item.Expense_Date).Days} days ago")</span>
+                                                <h3 class="timeline-header">@item.ExpenseTypeDescription</h3>
+                                                <div class="timeline-body">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="TotalExpense">Expense Amount:</label>
+                                                            @Html.TextBoxFor(model => item.ExpenseAmount, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                <div>
+                                    <i class="far fa-clock bg-gray"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="maintance">
+                            @if (Model.vch_mant.Count > 0)
+                            {
+                                <div class="timeline timeline-inverse">
+                                    @foreach (var group in Model.vch_mant.GroupBy(e => e.Maintance_Date.Date))
+                                    {
+                                        <div class="time-label">
+                                            <span class="bg-success">
+                                                @group.Key.ToString("dd MMM. yyyy")
+                                            </span>
+                                        </div>
+                                        @foreach (var item in group)
+                                        {
+                                            <div>
+                                                <i class="fas fa-wallet bg-green"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="far fa-clock"></i> @($"{(DateTime.Now - item.Maintance_Date).Days} days ago")</span>
+                                                    <h3 class="timeline-header">@item.Maintance_Description</h3>
+                                                    <div class="timeline-body">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="TotalExpense">Expense Amount:</label>
+                                                                @Html.TextBoxFor(model => item.Maintance_Price, "{0:N0}", new { @class = "form-control", @readonly = "readonly" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <div>
+                                        <i class="far fa-clock bg-gray"></i>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    No maintenance records found.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

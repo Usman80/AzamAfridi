@@ -1,9 +1,11 @@
 ﻿using AzamAfridi.Data;
 using AzamAfridi.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AzamAfridi.Controllers
 {
@@ -11,13 +13,26 @@ namespace AzamAfridi.Controllers
     public class ExpenseController : Controller
     {
         private readonly AppDbContext _db;
-        public ExpenseController(AppDbContext db)
+        private readonly UserManager<AppUser> _userManager;
+        public ExpenseController(AppDbContext db, UserManager<AppUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
-            var list = await _db.RouteDetails.ToListAsync();
+            List<RouteDetail> list;
+            var user = await _userManager.GetUserAsync(User);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("ADMIN"))
+            {
+               list = await _db.RouteDetails.ToListAsync();
+            }
+            else
+            {
+               list = await _db.RouteDetails.Where(x=>x.Isbuilty!=true).ToListAsync();
+            }
+            
             return View(list);
         }
 
@@ -200,7 +215,7 @@ namespace AzamAfridi.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> DeleteExpense(string builtyNo)
         {
             var Model = await _db.RouteDetails.Where(x => x.BuiltyNo == builtyNo).FirstOrDefaultAsync();
@@ -212,6 +227,71 @@ namespace AzamAfridi.Controllers
                 return Json(new { isSaved = true });
             }
             return Json(new { isSaved = false });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExpenseDetail(string BuiltyNo, int RouteId)
+        {
+            var routeDetailsList = await (
+            from rd in _db.RouteDetails
+            join sn in _db.StationNames on rd.FromStation equals sn.StationCode
+            where rd.BuiltyNo == BuiltyNo && rd.RouteID == RouteId && rd.Isbuilty == false
+            select new RouteDetailsModel
+            {
+                RouteID = rd.RouteID,
+                BuiltyNo = rd.BuiltyNo,
+                DriveName = rd.DriveName,
+                TruckNo = rd.TruckNo,
+                StartDate = rd.Start_Date,
+                Weight = rd.Weight,
+                FromStation = sn.StationDescription,
+                ToStation = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.ToStation).StationDescription,
+                FromFare = Convert.ToDecimal(rd.FromFare),
+                ReturnDate = rd.Return_Date,
+                ReturnWeight = rd.Return_Weight,
+                ReturnFromStation = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.Return_FromStation).StationDescription,
+                ReturnToStation = _db.StationNames.FirstOrDefault(x => x.StationCode == rd.Return_ToStation).StationDescription,
+                ToFare = Convert.ToDecimal(rd.ToFare),
+                TotalFare = Convert.ToDecimal(rd.TotalFare),
+                TotalExpense = Convert.ToDecimal(rd.TotalExpense),
+                TotalIncome = Convert.ToDecimal(rd.TotalIncome),
+                TotalMaintance = Convert.ToDecimal(rd.TotalMaintance)
+            }
+            ).FirstOrDefaultAsync();
+            var obj = new ExpenseDetailModel();
+            if (routeDetailsList != null)
+            {
+                var expenses = await (
+                from a in _db.ExpenseOnRoutes
+                join b in _db.ExpenseTypes on a.ExpenseTypeId equals b.ExpenseTypeId
+                where a.RouteDetail.BuiltyNo == routeDetailsList.BuiltyNo
+                select new ExpenseModel
+                {
+                    ExpenseTypeDescription = b.ExpenseTypeDescription,
+                    ExpenseAmount = Convert.ToDecimal(a.Amount),
+                    Expense_Date = a.Expense_Date
+                }
+            ).ToListAsync();
+
+                var vehicle_Maintaince = await (
+                    from a in _db.Maintance_Vehicles
+                    where a.RouteDetail.BuiltyNo.Contains(routeDetailsList.BuiltyNo)
+                    select new Vehicle_MaintanceModel
+                    {
+                        Maintance_Description = a.Maintance_Description,
+                        Maintance_Price = Convert.ToDecimal(a.Maintance_Price),
+                        Maintance_Date = a.Maintance_Date
+                    }
+                ).ToListAsync();
+
+                obj = new ExpenseDetailModel
+                {
+                    RouteDetails = routeDetailsList,
+                    Expenses = expenses,
+                    vch_mant = vehicle_Maintaince
+                };
+            }
+            return View(obj);
         }
 
         [NonAction]

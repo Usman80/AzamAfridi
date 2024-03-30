@@ -1,14 +1,10 @@
 ﻿@using AzamAfridi.Utility
 @model List<RouteDetail>
-
-<script>
-    $(document).ready(function () {
-        $("#CreateBuilty").click(function () {
-            window.location.href = '/Expense/Create';
-        });
-    });
-</script>
-
+<style>
+    .deleted-row {
+        background-color: #f8d7da !important; /* Customize the background color for deleted rows */
+    }
+</style>
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -21,92 +17,70 @@
         </div>
     </div>
 </div>
-@* <section class="content">
-    <div class="container-fluid"> *@
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Builty Details</h3>
                 <button type="button" class="btn btn-primary btn-flat" style="margin-left: 1000px;" id="CreateBuilty">Create Builty</button>
             </div>
             @if (Model != null && Model.Count() > 0)
             {
-                <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="RouteDetails" class="table table-bordered table-striped">
+                    <table id="RouteDetails" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Builty No</th>
                                 <th>Driver Name</th>
                                 <th>Truck No</th>
                                 <th>Date</th>
-                                <th>Weight</th>
                                 <th>From Station</th>
                                 <th>To Station</th>
-                                <th>From-Fare</th>
-                                <th>To-Fare</th>
-                                <th>Total Fare</th>
-                                <th>Total Expense</th>
+                                <th>From Fare</th>
+                                <th>To Fare</th>
                                 <th>Total Income</th>
+                                <th>Total Expense</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var data in Model)
                             {
-                                <tr>
-                                    <td>@data.BuiltyNo</td>
+                                <tr data-builty-no="@data.BuiltyNo" class="builty-row @(!data.Isbuilty ? "" : "deleted-row")">
                                     <td>@data.DriveName</td>
                                     <td>@data.TruckNo</td>
                                     <td>@data.Start_Date.Date.ToString("dd/MM/yyyy")</td>
-                                    <td>@data.Weight</td>
                                     <td>@data.FromStation</td>
                                     <td>@data.ToStation</td>
                                     <td>@data.FromFare.ToString("N0")</td>
                                     <td>@data.ToFare.ToString("N0")</td>
-                                    <td>@data.TotalFare.ToString("N0")</td>
-                                    <td>@data.TotalExpense.ToString("N0")</td>
                                     <td>@data.TotalIncome.ToString("N0")</td>
+                                    <td>@data.TotalExpense.ToString("N0")</td>
                                     @if (User.IsInRole(SD.RoleAdmin) && data.Isbuilty == false)
                                     {
                                         <td>
-                                            @* <a href="@Url.Action("DeleteExpense", "Expense", new { builtyNo = data.BuiltyNo })">
-                                                <i class="fas fa-trash-alt"></i> Delete
-                                            </a> *@
-                                            <button type="button" class="btn btn-danger" onclick="deleteExpense('@data.BuiltyNo')">
+                                            <button type="button" class="btn btn-danger delete-btn" id="Deletebtn1Expense" data-builty-no="@data.BuiltyNo">
                                                 <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                            </button> <a asp-action="ExpenseDetail" asp-controller="Expense" asp-route-BuiltyNo="@data.BuiltyNo" asp-route-RouteId="@data.RouteID" 
+                                                       class="btn btn-info detail-btn">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a>
                                         </td>
                                     }
                                     else
                                     {
-                                        <td></td>
+                                        <td>
+                                            <a asp-action="ExpenseDetail" asp-controller="Expense" asp-route-BuiltyNo="@data.BuiltyNo" asp-route-RouteId ="@data.RouteID" 
+                                            class="btn btn-info detail-btn">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a>
+                                        </td>
                                     }
-
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
-                <!-- /.card-body -->
             }
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.col -->
 </div>
-@*     </div>
-</section> *@
-<script>
-    $(document).ready(function () {
-        $(function () {
-            $.noConflict();
-            $("#RouteDetails").DataTable({
-                "responsive": true, "lengthChange": false, "autoWidth": false
-            }).buttons().container().appendTo('#RouteDetails_wrapper .col-md-6:eq(0)');
-        });
-    });
-
-    
-</script>
+<script src="~/js/expense_builty/index/jquery-expense_builty_index-min.js"></script>
