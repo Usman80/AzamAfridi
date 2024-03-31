@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using AzamAfridi.Utility
 @using Microsoft.AspNetCore.Identity
 @using AzamAfridi.Models
 @inject UserManager<AppUser> UserManager
@@ -46,7 +47,7 @@
                 <span class="brand-text font-weight-light">Azam Afridi</span>
             </a>
             <div class="sidebar">
-                @if(User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated)
                 {
                     var user = await UserManager.GetUserAsync(User);
                     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -68,30 +69,42 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ExpenseType" asp-action="Index">
-                                <i class="nav-icon fas fa-money-bill"></i>
-                                <p>
-                                    Expense Type
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Station" asp-action="Index">
-                                <i class="nav-icon fas fa-bus"></i>
-                                <p>
-                                    Station
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ExpenseReport" asp-action="Index">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>
-                                    Expense Report
-                                </p>
-                            </a>
-                        </li>
+                        @if (User.IsInRole(SD.RoleAdmin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ExpenseType" asp-action="Index">
+                                    <i class="nav-icon fas fa-money-bill"></i>
+                                    <p>
+                                        Expense Type
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Station" asp-action="Index">
+                                    <i class="nav-icon fas fa-bus"></i>
+                                    <p>
+                                        Station
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ExpenseReport" asp-action="Index">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        Expense Report
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ExpenseTypeReport" asp-action="Index">
+                                    <i class="nav-icon fas fa-credit-card"></i>
+                                    <p>
+                                        Expense Type Report
+                                    </p>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </nav>
             </div>

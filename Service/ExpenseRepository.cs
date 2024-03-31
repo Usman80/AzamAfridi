@@ -12,28 +12,29 @@ namespace AzamAfridi.Service
         {
             _db = db;
         }
-        public async Task<List<ExpenseGroupedByType>> GetExpenseByRouteDetailsAsync(List<RouteDetail> routeDetails, int expenseTypeId)
+        public async Task<List<ExpenseGroupedByType>> GetExpenseByRouteDetailsAsync(List<RouteDetail> routeDetails, int expenseTypeId, DateTime StartDate, DateTime EndDate)
         {
             var routeIds = routeDetails.Select(rd => rd.RouteID).ToList();
             var builtyNos = routeDetails.Select(rd => rd.BuiltyNo).ToList();
 
-            var result = _db.ExpenseOnRoutes
+            var result = await _db.ExpenseOnRoutes
                 .Include(eor => eor.ExpenseType)
-                .Where(eor => routeIds.Contains(eor.RouteID) && builtyNos.Contains(eor.RouteDetail.BuiltyNo) && eor.ExpenseType.ExpenseTypeId == expenseTypeId)
+                .Where(eor => routeIds.Contains(eor.RouteID) && builtyNos.Contains(eor.RouteDetail.BuiltyNo) && eor.ExpenseType.ExpenseTypeId == expenseTypeId
+                       && (eor.Expense_Date >=StartDate && eor.Expense_Date<=EndDate ))
                 .GroupBy(eor => new { eor.ExpenseType.ExpenseTypeCode, eor.ExpenseType.ExpenseTypeDescription })
                 .Select(g => new ExpenseGroupedByType
                 {
                     ExpenseTypeCode = g.Key.ExpenseTypeCode,
                     ExpenseTypeDescription = g.Key.ExpenseTypeDescription,
                     TotalExpenseAmount = g.Sum(e => e.Amount)
-                }).ToList();
+                }).ToListAsync();
             return result;
         }
 
         public async Task<List<RouteDetail>> GetRouteDetailsByTruckNoAsync(string truckNumber)
         {
             return await _db.RouteDetails
-            .Where(rd => rd.TruckNo == truckNumber)
+            .Where(rd => rd.TruckNo == truckNumber && rd.Isbuilty == false)
             .ToListAsync();
         }
     }

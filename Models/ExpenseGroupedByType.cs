@@ -5,5 +5,6 @@
         public string ExpenseTypeCode { get; set; }
         public string ExpenseTypeDescription { get; set; }
         public double TotalExpenseAmount { get; set; }
+        public DateTime ExpenseDate { get; set; }
     }
 }

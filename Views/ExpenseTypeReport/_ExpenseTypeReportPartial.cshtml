@@ -1,0 +1,65 @@
+﻿@model List<ExpenseGroupedByType>
+<section class="content">
+    <div class="container-fluid">
+        @if (Model != null && Model.Count() > 0)
+        {
+            decimal TotalExpense = 0;
+            <div class="row">
+                <div class="col-12">
+                    <div class="invoice p-3 mb-3">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>
+                                    <i class="fas fa-globe"></i> Azam Afridi, Pvt Ltd.
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense Description</th>
+                                            <th>Amount</th>
+                                            <th>Expense Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var expense in Model)
+                                        {
+                                            TotalExpense = Convert.ToDecimal(expense.TotalExpenseAmount) + TotalExpense;
+                                            <tr>
+                                                <td>@expense.ExpenseTypeDescription</td>
+                                                <td>@expense.TotalExpenseAmount.ToString("N0")</td>
+                                                <td>@expense.ExpenseDate.ToString("dd/MM/yyyy")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Total Expense:</th>
+                                            <td>Rs/@TotalExpense.ToString("N0")</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="callout callout-info">
+                <h5><i class="fas fa-warning"></i> Note:</h5>
+                No Data Found
+            </div>
+        }
+    </div>
+</section>

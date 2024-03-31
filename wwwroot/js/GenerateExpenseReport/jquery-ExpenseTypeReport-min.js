@@ -2,8 +2,10 @@
     $('#loadTypeReportBtn').click(function () {
         var truckNo = $('#truckNoInput').val();
         var expenseType = $('.ExpenseTypeId').val();
-        alert(expenseType);
-        if (truckNo == "" || truckNo == null || expenseType == "" || expenseType == null) {
+        var startDate = $("#Start_Date").val();
+        var endDate = $("#End_Date").val();
+        if (truckNo == "" || expenseType == "" || startDate == "" || endDate == "")
+        {
             Swal.fire({
                 icon: "error",
                 title: "Error...",
@@ -16,7 +18,9 @@
                 type: 'GET',
                 data: {
                     truckNumber: truckNo,
-                    expenseTypeId: expenseType
+                    expenseTypeId: expenseType,
+                    StartDate: startDate,
+                    EndDate: endDate
                 },
                 success: function (data) {
                     $('#ExpenseTypeReportContainer').html(data);

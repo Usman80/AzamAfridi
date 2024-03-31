@@ -85,6 +85,5 @@ namespace AzamAfridi.Controllers
             //return View(combinedModelList);
             return PartialView("_ExpenseReportPartial", combinedModelList);
         }
-
     }
 }

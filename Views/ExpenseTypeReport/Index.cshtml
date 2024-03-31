@@ -23,23 +23,49 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-3">
                         <div class="form-group">
                             <div class="input-group input-group-lg">
-                                <input type="search" class="form-control form-control-lg" id="truckNoInput" placeholder="Enter Truck No">
-                                <div class="input-group-append">
-                                    <button type="submit" id="loadTypeReportBtn" class="btn btn-lg btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                                <input type="date" class="form-control form-control-lg" id="Start_Date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <input type="date" class="form-control form-control-lg" id="End_Date">
                             </div>
                         </div>
                     </div>
                 </div>
-              @*   <div class="row mt-3">
-                    <div class="col-md-10 offset-md-1">
-                        <div id="ExpenseTypeReportContainer"></div>
+                <div class="form-group">
+                    <div class="input-group input-group-lg">
+                        <input type="search" class="form-control form-control-lg" id="truckNoInput" placeholder="Enter Truck No">
+                        <div class="input-group-append">
+                            <button type="submit" id="loadTypeReportBtn" class="btn btn-lg btn-default">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
                     </div>
+                </div>
+                @* <div class="col-3">
+                <div class="form-group">
+                <div class="input-group input-group-lg">
+                @Html.DropDownList("Expense_DDL", (SelectList)ViewData["ExpenseTypeDDL"], new { @class = "form-control ExpenseTypeId", style = "width: 100%;" })
+                </div>
+                </div>
+                </div> *@
+                @* <div class="col-3">
+                <div class="form-group">
+                <div class="input-group input-group-lg">
+                <input type="search" class="form-control form-control-lg" id="truckNoInput" placeholder="Enter Truck No">
+                <div class="input-group-append">
+                <button type="submit" id="loadTypeReportBtn" class="btn btn-lg btn-default">
+                <i class="fa fa-search"></i>
+                </button>
+                </div>
+                </div>
+                </div>
                 </div> *@
                 <div class="row mt-3">
                     <div class="col-md-12">
