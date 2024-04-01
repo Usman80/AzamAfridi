@@ -110,23 +110,25 @@
                 </div>
                 @* Add Expense Regarding Trip *@
                 <hr />
-                <span class="input-group-append">
-                    <button type="button" class="btn btn-success btn-flat" id="AddExpenseTypes">Add</button>
-                </span>
                 <div id="ExpenseTypes">
                     @Html.Partial("ExpenseOnRoute", new ExpenseOnRoute())
                 </div>
+                <span class="input-group-append">
+                    <button type="button" class="btn btn-success btn-flat" id="AddExpenseTypes"><i class="fas fa-plus"></i></button>
+                </span>
                 @* Add Maintance Regarding Vehicle *@
                 <hr />
-                <span class="input-group-append">
-                    <button type="button" class="btn btn-success btn-flat" id="AddMaintanceVeh">Add</button>
-                </span>
                 <div id="MaintanceVeh">
                     @Html.Partial("VehicleMaintance", new Vehicle_Maintance())
                 </div>
                 <span class="input-group-append">
+                    <button type="button" class="btn btn-success btn-flat" id="AddMaintanceVeh"><i class="fas fa-plus"></i></button>
+                </span>
+                <hr />
+
+                <span class="input-group-append">
                     <button type="button" class="btn btn-primary btn-flat" id="SaveBuilty">Save Builty</button>
-                    <button type="button" class="btn btn-danger btn-flat" style="margin-left: 10px;" id="Back">Back</button>
+                    <button type="button" class="btn btn-danger btn-flat" style="margin-left: 10px;" id="Back"><i class="fas fa-arrow-left"></i></button>
                 </span>
             </div>
         </div>

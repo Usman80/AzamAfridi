@@ -20,5 +20,6 @@ namespace AzamAfridi.Models
         public double Amount { get; set; }
 
         public DateTime Expense_Date { get; set; }
+        public string DieselLitre { get; set; }
     }
 }

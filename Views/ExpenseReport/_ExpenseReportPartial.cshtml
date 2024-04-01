@@ -1,4 +1,66 @@
 ﻿@model List<CombinedModel>
+<style>
+    /* Custom CSS for financial summary */
+    .invoice {
+        background-color: #f9f9f9; /* Light gray background */
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    }
+
+    .summary-item {
+        margin-bottom: 15px;
+    }
+
+    .summary-label {
+        font-weight: bold;
+        color: #555; /* Dark gray color for labels */
+    }
+
+    .summary-value {
+        font-size: 1.2em;
+    }
+
+    .green-text {
+        color: #28a745; /* Green color for text */
+    }
+
+    .red-text {
+        color: #dc3545; /* Red color for text */
+    }
+
+    .maintenance-list {
+        margin-top: 15px;
+    }
+
+    .maintenance-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #fff; /* White background */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    }
+
+    .maintenance-description {
+        font-weight: bold;
+        color: #dc3545; /* Red color for maintenance description */
+    }
+
+    .total-net-income {
+        margin-top: 20px;
+        border-top: 2px solid #28a745; /* Green color for border */
+        padding-top: 10px;
+    }
+
+        .total-net-income .summary-value {
+            color: #28a745; /* Green color for total net income */
+        }
+
+    .red-total-cost .summary-label,
+    .red-total-cost .summary-value {
+        color: #dc3545; /* Red color for total monthly expense cost */
+    }
+</style>
 <section class="content">
     <div class="container-fluid">
         @if (Model != null && Model.Count() > 0)
@@ -17,7 +79,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>
-                                            <i class="fas fa-globe"></i> Azam Afridi, Pvt Ltd.
+                                            <i class="fas fa-globe"></i> Pak Group 51, Pvt Ltd.
                                             <small class="float-right">Trip# @recordNumber</small>
                                         </h4>
                                         @{
@@ -41,7 +103,7 @@
                                         <br />
                                         <b>Date:</b> @routedetail.StartDate.ToString("dd/MM/yyyy")<br />
                                         <b>Station:</b> @routedetail.FromStation - @routedetail.ToStation<br />
-                                        <b>Wazan:</b> @routedetail.Weight<br />
+                                        <b>Wazan:</b> @((int)routedetail.Weight)<br />
                                         <b>Karaya:</b> @routedetail.FromFare.ToString("N0")<br />
                                     </div>
                                     <div class="col-sm-6 invoice-col">
@@ -49,7 +111,7 @@
                                         <br />
                                         <b>Date:</b> @routedetail.ReturnDate.ToString("dd/MM/yyyy")<br />
                                         <b>Station:</b> @routedetail.ReturnFromStation - @routedetail.ReturnToStation<br />
-                                        <b>Wazan:</b> @routedetail.ReturnWeight<br />
+                                        <b>Wazan:</b> @((int)routedetail.ReturnWeight)<br />
                                         <b>Karaya:</b> @routedetail.ToFare.ToString("N0")<br />
                                     </div>
                                 </div>
@@ -76,48 +138,22 @@
                                         </table>
                                     </div>
                                 </div>
-                                @if (combineModel.vch_mant.Count() > 0)
-                                {
-                                    <div class="row">
-                                        <div class="col-12 table-responsive">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Maintance Description</th>
-                                                        <th>Amount</th>
-                                                        <th>Maintance Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var maintance in combineModel.vch_mant)
-                                                    {
-                                                        <tr>
-                                                            <td>@maintance.Maintance_Description</td>
-                                                            <td>@maintance.Maintance_Price.ToString("N0")</td>
-                                                            <td>@maintance.Maintance_Date.ToString("dd/MM/yyyy")</td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                }
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <tr>
-                                                    <th style="width:67%">Total Trip Karaya:</th>
+                                                    <th style="width:67%">Total Trip Fare:</th>
                                                     <td>@routedetail.TotalFare.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Total Trip Expense:</th>
                                                     <td>@routedetail.TotalExpense.ToString("N0")</td>
                                                 </tr>
-                                                <tr>
+                                                @* <tr>
                                                     <th>Total Maintance:</th>
                                                     <td>@routedetail.TotalMaintance.ToString("N0")</td>
-                                                </tr>
+                                                </tr> *@
                                                 <tr>
                                                     <th>Total Trip Income:</th>
                                                     <td>@routedetail.TotalIncome.ToString("N0")</td>
@@ -126,11 +162,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @* <div class="row no-print">
-                    <div class="col-12">
-                    <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                    </div>
-                    </div> *@
                             </div>
                         </div>
                     </div>
@@ -138,16 +169,53 @@
             }
             <div class="row">
                 <div class="col-12">
-                    <div class="invoice p-3 mb-3">
-                        <div class="row invoice-info">
-                            <div class="col-sm-6 invoice-col">
-                                <br />
-                                <b>Total Truck Income:</b> @TotalIncome.ToString("N0")
-                                <br />
-                                <b>Total Maintance Cost:</b> @TotalMaintance.ToString("N0")
-                                <br />
-                                <b>Total Net Income:</b> @TotalNetProfit.ToString("N0")
+                    <div class="invoice">
+                        <h4 class="mb-4">Total Financial Summary</h4>
+
+                        <!-- Total Truck Income -->
+                        <div class="summary-item">
+                            <span class="summary-label green-text">Total Truck Income:</span>
+                            <span class="summary-value green-text">@TotalIncome.ToString("N0")</span>
+                        </div>
+
+                        <!-- Maintenance Details -->
+                        @if (Model.Any(data => data.vch_mant.Any()))
+                        {
+                            <h5 class="mt-4 mb-3">Maintenance Records</h5>
+                            <div class="maintenance-list">
+                                @foreach (var data in Model)
+                                {
+                                    foreach (var vch in data.vch_mant)
+                                    {
+                                        <div class="maintenance-item">
+                                            <span class="maintenance-description bold-text red-text">@vch.Maintance_Description:</span>
+                                            <span class="maintenance-price red-text">@vch.Maintance_Price.ToString("N0")</span>
+                                        </div>
+                                    }
+                                }
                             </div>
+                        }
+
+                        <!-- Total Monthly Expense Cost -->
+                        @if (Model.Any(data => data.vch_mant.Any()))
+                        {
+                            <div class="summary-item mt-4 red-total-cost">
+                                <span class="summary-label red-text">Total Monthly Expense Cost:</span>
+                                <span class="summary-value red-text">-@TotalMaintance.ToString("N0")</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="summary-item mt-4 red-total-cost">
+                                <span class="summary-label red-text">Total Monthly Expense Cost:</span>
+                                <span class="summary-value red-text">-@TotalMaintance.ToString("N0")</span>
+                            </div>
+                        }
+
+                        <!-- Total Net Income -->
+                        <div class="summary-item total-net-income">
+                            <span class="summary-label green-text">Total Net Income:</span>
+                            <span class="summary-value green-text">@TotalNetProfit.ToString("N0")</span>
                         </div>
                     </div>
                 </div>
@@ -156,7 +224,7 @@
         else
         {
             <div class="callout callout-info">
-                <h5><i class="fas fa-warning"></i> Note:</h5>
+                <h5><i class="fas fa-error"></i> Note:</h5>
                 No Data Found
             </div>
         }

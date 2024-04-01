@@ -1,10 +1,16 @@
 ﻿@model ExpenseOnRoute
 <div class="row" id="ExpenseOnRouteTypes">
-    <div class="col-md-4">
+    <div class="col-md-2">
         <div class="form-group">
             <label for="exampleInputEmail1">Expense Type:</label>
-            @Html.DropDownListFor(model => model.ExpenseTypeId, (SelectList)ViewData["ExpenseTypeDDL"], new { @class = "form-control ExpenseTypeId", style = "width: 100%;", id = "ExpenseTypeId-1" })
+           @*  @Html.DropDownListFor(model => model.ExpenseTypeId, (SelectList)ViewData["ExpenseTypeDDL"], new { @class = "form-control ExpenseTypeId", style = "width: 100%;", id = "ExpenseTypeId-1" }) *@
+            @Html.DropDownListFor(model => model.ExpenseTypeId, (SelectList)ViewData["ExpenseTypeDDL"],"-- Select an Expense Type --", new { @class = "form-control ExpenseTypeId", style = "width: 100%;", id = "ExpenseTypeId-1" })
         </div>
+    </div>
+    <div class="col-md-2 diesel_litre_hidden" hidden>
+        <label for="DieselLitre">Diesel Litre:</label>
+        <input class="form-control DieselLitre" id="DieselLitre-1" value="@Model.DieselLitre" placeholder="Enter Diesel litre">
+        <input type="hidden" value="@Model.ExpenseOnRouteID" id="ExpenseOnRouteID-1" class="ExpenseOnRouteID" />
     </div>
     <div class="col-md-4">
         <label for="Amount">Amount:</label>

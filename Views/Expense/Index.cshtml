@@ -29,7 +29,7 @@
                     <table id="RouteDetails" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Driver Name</th>
+                                @* <th>Driver Name</th> *@
                                 <th>Truck No</th>
                                 <th>Date</th>
                                 <th>From Station</th>
@@ -45,7 +45,7 @@
                             @foreach (var data in Model)
                             {
                                 <tr data-builty-no="@data.BuiltyNo" class="builty-row @(!data.Isbuilty ? "" : "deleted-row")">
-                                    <td>@data.DriveName</td>
+                                    @* <td>@data.DriveName</td> *@
                                     <td>@data.TruckNo</td>
                                     <td>@data.Start_Date.Date.ToString("dd/MM/yyyy")</td>
                                     <td>@data.FromStation</td>
@@ -62,6 +62,13 @@
                                             </button> <a asp-action="ExpenseDetail" asp-controller="Expense" asp-route-BuiltyNo="@data.BuiltyNo" asp-route-RouteId="@data.RouteID" 
                                                        class="btn btn-info detail-btn">
                                                 <i class="fas fa-file-alt"></i>
+                                            </a>
+                                           @*  <a asp-action="Edit" asp-controller="Expense" asp-route-builtyNo="@data.BuiltyNo" 
+                                                       class="btn btn-info detail-btn">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a> *@
+                                            <a asp-action="Edit" asp-controller="Expense" asp-route-builtyNo="@data.BuiltyNo" class="btn btn-primary detail-btn">
+                                                                <i class="fas fa-pencil-alt"></i>
                                             </a>
                                         </td>
                                     }

@@ -37,38 +37,7 @@
             $("#Return_Date").val("");
         }
     });
-    //function isDateBetween(startDate, endDate, targetDate) {
-    //    return startDate <= targetDate && targetDate <= endDate;
-    //}
-
-    //$(".Expense_Date").on('change', function ()
-    //{
-    //    if ($("#Start_Date").val() == "")
-    //    {
-    //        Swal.fire({
-    //            icon: "error",
-    //            title: "Oops...",
-    //            text: "Enter Start Date First!"
-    //        });
-    //    }
-    //    else if ($("#Return_Date").val() == "") {
-    //        Swal.fire({
-    //            icon: "error",
-    //            title: "Oops...",
-    //            text: "Enter Return Date First!"
-    //        });
-    //    }
-    //    if (isDateBetween($("#Start_Date").val(), $("#Return_Date").val(), $(".Expense_Date").val())) {
-    //    } else {
-    //        Swal.fire({
-    //            icon: "error",
-    //            title: "Oops...",
-    //            text: "Expense Date Should be In Between Start Date & Return Date"
-    //        });
-    //        $(".Expense_Date").val("");
-    //    }
-    //});
-
+    
     $(document).on('blur', '.Expense_Date', function () {
         var rowId = $(this).closest('.Expense_Date').attr('id');
         var result = rowId.split('-');
@@ -281,6 +250,7 @@
             $('.Amount').each(function () {
                 var ExpenseType = {};
                 ExpenseType.ExpenseTypeId = parseInt($("#ExpenseTypeId-" + count).val());
+                ExpenseType.DieselLitre = $("#DieselLitre-" + count).val();
                 ExpenseType.Amount = parseFloat($("#Amount-" + count).val().replace(/,/g, ''));
                 ExpenseType.Expense_Date = $("#Expense_Date-" + count).val();
                 Model.Expenses.push(ExpenseType);
@@ -438,6 +408,19 @@
         $(this).closest('#VehicleMaintanceTypes').remove();
         CalculateTotalMaintanceAmount();
     });
+
+    $('.ExpenseTypeId').on('change', function () {
+        var selectedText = $(this).find('option:selected').text();
+        if (selectedText.toLowerCase().indexOf('diesel') !== -1)
+        {
+            $('.diesel_litre_hidden').removeAttr('hidden');
+        }
+        else
+        {
+            $('.diesel_litre_hidden').attr('hidden', 'hidden');
+        }
+    });
+
     $("#Back").click(function () {
         window.location.href = '/Expense/Index';
     });
