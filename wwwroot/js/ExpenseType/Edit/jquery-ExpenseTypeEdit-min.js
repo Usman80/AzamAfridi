@@ -3,26 +3,25 @@
         var errorId = $(this).attr('id').replace('ExpenseType', 'ErrExpenseType');
         $("#" + errorId).html("");
     });
-    function validateInput(inputValue) {
-        //var pattern = /^[a-zA-Z]+[-_]*[a-zA-Z]*$/;
-        var pattern = /^[^\d]+$/;
-        return pattern.test(inputValue);
-    }
-    $("#ExpenseTypeCode, #ExpenseTypeDescription").on('keyup', function (e) {
-        var inputValue = $(this).val();
-        if (e.key === "Backspace" || e.key === "Enter" || (e.key >= 37 && e.key <= 40)) {
-            return;
-        }
-        if (!validateInput(inputValue)) {
-            $(this).val('');
-            $(this).addClass('is-invalid');
-        } else {
-            $(this).removeClass('is-invalid');
-        }
-    });
+    //function validateInput(inputValue) {
+    //    //var pattern = /^[a-zA-Z]+[-_]*[a-zA-Z]*$/;
+    //    var pattern = /^[^\d]+$/;
+    //    return pattern.test(inputValue);
+    //}
+    //$("#ExpenseTypeCode, #ExpenseTypeDescription").on('keyup', function (e) {
+    //    var inputValue = $(this).val();
+    //    if (e.key === "Backspace" || e.key === "Enter" || (e.key >= 37 && e.key <= 40)) {
+    //        return;
+    //    }
+    //    if (!validateInput(inputValue)) {
+    //        $(this).val('');
+    //        $(this).addClass('is-invalid');
+    //    } else {
+    //        $(this).removeClass('is-invalid');
+    //    }
+    //});
 
     function PreSave() {
-        alert($("#ExpenseTypeId").val());
         var validform = true;
         if ($("#ExpenseTypeCode").val() == '') {
             $("#ErrExpenseTypeCode").html("Required *");

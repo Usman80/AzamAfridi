@@ -38,6 +38,7 @@ namespace AzamAfridi.Controllers
 
         public async Task<IActionResult> Create()
         {
+            var builty_No = "";
             var stations = await _db.StationNames
                 .Select(x => new SelectListModel { Code = x.StationCode, Description = x.StationDescription })
                 .ToListAsync();
@@ -49,9 +50,23 @@ namespace AzamAfridi.Controllers
 
             ViewData["ExpenseTypeDDL"] = new SelectList(expensetype, "Code", "Description");
 
+            var lastBuiltyNo = await _db.RouteDetails
+            .OrderByDescending(r => r.BuiltyNo)
+            .Select(r => r.BuiltyNo)
+            .FirstOrDefaultAsync();
+            if (!string.IsNullOrEmpty(lastBuiltyNo) && int.TryParse(lastBuiltyNo, out int lastBuiltyNoInt))
+            {
+                builty_No = (lastBuiltyNoInt + 1).ToString("D10");
+            }
+            else
+            {
+                builty_No = "0000000000";
+            }
+
             //PopulateStationName();
             RouteDetail Model = new RouteDetail();
             Model.Expenses = new List<ExpenseOnRoute>();
+            Model.BuiltyNo = builty_No;
             Model.Expenses.Add(new ExpenseOnRoute());
             return View(Model);
         }

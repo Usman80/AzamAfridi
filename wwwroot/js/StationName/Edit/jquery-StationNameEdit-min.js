@@ -3,23 +3,23 @@
         var errorId = $(this).attr('id').replace('StationName', 'ErrStationName');
         $("#" + errorId).html("");
     });
-    function validateInput(inputValue) {
-        //var pattern = /^[a-zA-Z]+[-_]*[a-zA-Z]*$/;
-        var pattern = /^[^\d]+$/;
-        return pattern.test(inputValue);
-    }
-    $("#StationCode, #StationDescription").on('keyup', function (e) {
-        var inputValue = $(this).val();
-        if (e.key === "Backspace" || e.key === "Enter" || (e.key >= 37 && e.key <= 40)) {
-            return;
-        }
-        if (!validateInput(inputValue)) {
-            $(this).val('');
-            $(this).addClass('is-invalid');
-        } else {
-            $(this).removeClass('is-invalid');
-        }
-    });
+    //function validateInput(inputValue) {
+    //    //var pattern = /^[a-zA-Z]+[-_]*[a-zA-Z]*$/;
+    //    var pattern = /^[^\d]+$/;
+    //    return pattern.test(inputValue);
+    //}
+    //$("#StationCode, #StationDescription").on('keyup', function (e) {
+    //    var inputValue = $(this).val();
+    //    if (e.key === "Backspace" || e.key === "Enter" || (e.key >= 37 && e.key <= 40)) {
+    //        return;
+    //    }
+    //    if (!validateInput(inputValue)) {
+    //        $(this).val('');
+    //        $(this).addClass('is-invalid');
+    //    } else {
+    //        $(this).removeClass('is-invalid');
+    //    }
+    //});
 
     function PreSave() {
         var validform = true;
