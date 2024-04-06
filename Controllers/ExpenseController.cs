@@ -145,12 +145,20 @@ namespace AzamAfridi.Controllers
                         Model.Expenses = new List<ExpenseOnRoute>();
                         Model.Expenses = lstExpenseOnRoute;
                     }
+                    if (Model.Vehicles == null)
+                    {
+                        var lstVehicles = await _db.Maintance_Vehicles.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToListAsync();
+                        Model.Vehicles = new List<Vehicle_Maintance>();
+                        Model.Vehicles = lstVehicles;
+                    }
                     return View(Model);
                 }
             }
             RouteDetail ViewModel = new RouteDetail();
             ViewModel.Expenses = new List<ExpenseOnRoute>();
             ViewModel.Expenses.Add(new ExpenseOnRoute());
+            ViewModel.Vehicles = new List<Vehicle_Maintance>();
+            ViewModel.Vehicles.Add(new Vehicle_Maintance());
             return View(ViewModel);
         }
 
@@ -161,7 +169,7 @@ namespace AzamAfridi.Controllers
             {
                 return Json(new { isSaved = false });
             }
-            var isAlreadyExist = await _db.Set<RouteDetail>().SingleOrDefaultAsync(s => s.RouteID == Model.RouteID);
+            var isAlreadyExist = await _db.Set<RouteDetail>().SingleOrDefaultAsync(s => s.BuiltyNo == Model.BuiltyNo);
             //var isAlreadyExist = _db.RouteDetails.Where(x => x.RouteID == Model.RouteID).FirstOrDefault();
             if (isAlreadyExist != null && !string.IsNullOrEmpty(isAlreadyExist.BuiltyNo))
             {
@@ -181,9 +189,10 @@ namespace AzamAfridi.Controllers
                 isAlreadyExist.TotalExpense = Model.TotalExpense;
                 isAlreadyExist.TotalFare = Model.TotalFare;
                 isAlreadyExist.TotalIncome = Model.TotalIncome;
+                isAlreadyExist.TotalMaintance = Model.TotalMaintance;
                 if (isAlreadyExist.Expenses == null)
                 {
-                    var lstExpenseOnRoute = await _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == Model.RouteID).ToListAsync();
+                    var lstExpenseOnRoute = await _db.ExpenseOnRoutes.Where(x => x.RouteDetail.RouteID == isAlreadyExist.RouteID).ToListAsync();
                     isAlreadyExist.Expenses = new List<ExpenseOnRoute>();
                     isAlreadyExist.Expenses = lstExpenseOnRoute;
                 }
@@ -196,7 +205,12 @@ namespace AzamAfridi.Controllers
                         if (updateExpense != null)
                         {
                             expense.ExpenseType = updateExpense.ExpenseType;
-                            expense.RouteDetail = updateExpense.RouteDetail;
+                            expense.Expense_Date = updateExpense.Expense_Date;
+                            expense.DieselLitre = updateExpense.DieselLitre;
+                            if (string.IsNullOrEmpty(expense.DieselLitre))
+                            {
+                                expense.DieselLitre = "0";
+                            }
                             expense.ExpenseTypeId = updateExpense.ExpenseTypeId;
                             expense.Amount = updateExpense.Amount;
                             expense.ExpenseOnRouteID = updateExpense.ExpenseOnRouteID;
@@ -209,7 +223,42 @@ namespace AzamAfridi.Controllers
                         foreach (var expense in Model.Expenses)
                         {
                             expense.RouteDetail = isAlreadyExist;
+                            if(string.IsNullOrEmpty(expense.DieselLitre))
+                            {
+                                expense.DieselLitre = "0";
+                            }
                             isAlreadyExist.Expenses.Add(expense);
+                        }
+                    }
+                }
+                if (isAlreadyExist.Vehicles == null)
+                {
+                    var lstExpenseOnRoute = await _db.Maintance_Vehicles.Where(x => x.RouteDetail.RouteID == isAlreadyExist.RouteID).ToListAsync();
+                    isAlreadyExist.Vehicles = new List<Vehicle_Maintance>();
+                    isAlreadyExist.Vehicles = lstExpenseOnRoute;
+                }
+                if (isAlreadyExist.Vehicles != null && isAlreadyExist.Vehicles.Count() > 0)
+                {
+                    //Update Old Records
+                    foreach (var vehicle in isAlreadyExist.Vehicles)
+                    {
+                        var updateVehicle = Model.Vehicles.Where(x => x.VehicleMaintanceId == vehicle.VehicleMaintanceId).FirstOrDefault();
+                        if (updateVehicle != null)
+                        {
+                            vehicle.Maintance_Price = updateVehicle.Maintance_Price;
+                            vehicle.Maintance_Date = updateVehicle.Maintance_Date;
+                            vehicle.Maintance_Description = updateVehicle.Maintance_Description;
+                            vehicle.VehicleMaintanceId = updateVehicle.VehicleMaintanceId;
+                            Model.Vehicles.Remove(updateVehicle);
+                        }
+                    }
+                    //Add New Records
+                    if (Model.Vehicles != null && Model.Vehicles.Count() > 0)
+                    {
+                        foreach (var vehicle in Model.Vehicles)
+                        {
+                            vehicle.RouteDetail = isAlreadyExist;
+                            isAlreadyExist.Vehicles.Add(vehicle);
                         }
                     }
                 }
@@ -218,7 +267,28 @@ namespace AzamAfridi.Controllers
                 {
                     foreach (var data in isAlreadyExist.Expenses)
                     {
-                        await _db.ExpenseOnRoutes.AddAsync(data);
+                        if(data.ExpenseOnRouteID > 0)
+                        {
+                            _db.Update(data);
+                        }
+                        else
+                        {
+                            await _db.ExpenseOnRoutes.AddAsync(data);
+                        }
+                    }
+                }
+                if (isAlreadyExist.Vehicles != null && isAlreadyExist.Vehicles.Count() > 0)
+                {
+                    foreach (var data in isAlreadyExist.Vehicles)
+                    {
+                        if(data.VehicleMaintanceId > 0)
+                        {
+                            _db.Update(data);
+                        }
+                        else
+                        {
+                            await _db.Maintance_Vehicles.AddAsync(data);
+                        }
                     }
                 }
                 await _db.SaveChangesAsync();

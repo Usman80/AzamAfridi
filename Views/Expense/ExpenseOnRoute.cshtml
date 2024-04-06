@@ -7,20 +7,23 @@
             @Html.DropDownListFor(model => model.ExpenseTypeId, (SelectList)ViewData["ExpenseTypeDDL"],"-- Select an Expense Type --", new { @class = "form-control ExpenseTypeId", style = "width: 100%;", id = "ExpenseTypeId-1" })
         </div>
     </div>
-    <div class="col-md-2 diesel_litre_hidden" hidden>
+    <div class="col-md-2 diesel_litre_hidden" id="diesel_litre_hidden-1" hidden>
         <label for="DieselLitre">Diesel Litre:</label>
         <input class="form-control DieselLitre" id="DieselLitre-1" value="@Model.DieselLitre" placeholder="Enter Diesel litre">
-        <input type="hidden" value="@Model.ExpenseOnRouteID" id="ExpenseOnRouteID-1" class="ExpenseOnRouteID" />
     </div>
     <div class="col-md-4">
         <label for="Amount">Amount:</label>
-        <input class="form-control Amount" id="Amount-1" value="@((Model.Amount != null && Model.Amount != 0) ? Model.Amount.ToString() : "")" placeholder="Enter Expense Amount">
-        <input type="hidden" value="@Model.ExpenseOnRouteID" id="ExpenseOnRouteID-1" class="ExpenseOnRouteID" />
+        <input class="form-control Amount" id="Amount-1" value="@((Model.Amount != null && Model.Amount != 0) ? Model.Amount.ToString("N0") : "")" placeholder="Enter Expense Amount">
         <label id="ErrAmount-1" class="ErrAmount" style="color:red;"></label>
     </div>
     <div class="col-md-2">
         <label for="Expense_Date">Date:</label>
-        <input type="date" class="form-control Expense_Date" id="Expense_Date-1" value="@Model.Expense_Date">
+        @{
+            string Month = Model.Expense_Date.Month < 10 ? "0" + Model.Expense_Date.Month : Model.Expense_Date.Month.ToString();
+            string day = Model.Expense_Date.Day < 10 ? "0" + Model.Expense_Date.Day : Model.Expense_Date.Day.ToString();
+            string date = Model.Expense_Date.Year + "-" + Month + "-" + day;
+        }
+        <input type="date" class="form-control Expense_Date" id="Expense_Date-1" value="@date">
         <input type="hidden" value="@Model.ExpenseOnRouteID" id="ExpenseOnRouteID-1" class="ExpenseOnRouteID" />
         <label id="ErrExpense_Date-1" class="ErrExpense_Date" style="color:red;"></label>
     </div>

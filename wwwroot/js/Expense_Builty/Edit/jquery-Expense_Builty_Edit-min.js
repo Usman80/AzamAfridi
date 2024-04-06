@@ -1,4 +1,103 @@
 ﻿$(document).ready(function () {
+    function UpdateExpenseIdValuesDynamically() {
+        var count = 1;
+        $('.ExpenseOnRouteID').each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count;
+                count++;
+            }
+        });
+        count = 1;
+        $('.ExpenseTypeId').each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count;
+                count++;
+            }
+        });
+        count = 1;
+        $('.diesel_litre_hidden').each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count;
+                count++;
+            }
+        });
+        count = 1;
+        $('.DieselLitre').each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count;
+                count++;
+            }
+        });
+        count = 1;
+        $('.Amount').each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count;
+                count++;
+            }
+        });
+        count = 1;
+        $('.Expense_Date').each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count;
+                count++;
+            }
+        });
+    }
+    function UpdateVehicleIdValuesDynamically() {
+        var count_Maint = 1;
+        $(".VehicleMaintanceId").each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count_Maint;
+                count_Maint++;
+            }
+            count_Maint++;
+        });
+        count_Maint = 1;
+        $(".Maintance_Description").each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count_Maint;
+                count_Maint++;
+            }
+            count_Maint++;
+        });
+        count_Maint = 1;
+        $(".Maintance_Price").each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count_Maint;
+                count_Maint++;
+            }
+            count_Maint++;
+        });
+        count_Maint = 1;
+        $(".Maintance_Date").each(function () {
+            if (this.id) {
+                this.id = this.id.split('-')[0] + "-" + count_Maint;
+                count_Maint++;
+            }
+            count_Maint++;
+        });
+    }
+    function AfterPageLoadFormatting() {
+        debugger;
+        $(".DeleteExpenseOnRouteTypes").hide();
+        $(".DeleteVehicleMaintanceTypes").hide();
+        UpdateExpenseIdValuesDynamically();
+        UpdateVehicleIdValuesDynamically();
+        var count = 1;
+        $('.ExpenseTypeId').each(function () {
+            debugger;
+            var selectedText = $("#ExpenseTypeId-" + count).find('option:selected').text();
+            if (selectedText.toLowerCase().indexOf('diesel') !== -1) {
+                $('#diesel_litre_hidden-' + count).removeAttr('hidden');
+            }
+            else {
+                $('#diesel_litre_hidden-' + count).attr('hidden', 'hidden');
+            }
+            count++;
+        });
+    }
+
+    AfterPageLoadFormatting();
     $('#Weight,#Return_Weight').on('keypress', function (event) {
         var keyCode = event.which ? event.which : event.keyCode;
         var inputValue = $(this).val();
@@ -8,9 +107,74 @@
             return false;
         }
     });
-
+    
     function formatAmountWithCommas(amount) {
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $("#Return_Date").on('blur', function () {
+        if ($("#Start_Date").val() == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Enter Start Date First"
+            });
+            $("#Return_Date").val("");
+        }
+        else if ($("#Return_Date").val() < $("#Start_Date").val()) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Return Date Cannot be Less than Start Date"
+            });
+            $("#Return_Date").val("");
+        }
+    });
+
+    $("#Start_Date").on('change', function () {
+        if ($("#Return_Date").val() != "") {
+            $("#Return_Date").val("");
+        }
+    });
+
+    $(document).on('blur', '.Expense_Date', function () {
+        var rowId = $(this).closest('.Expense_Date').attr('id');
+        var result = rowId.split('-');
+        if ($("#Start_Date").val() == "" || $("#Return_Date").val() == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Enter Start Date & Return Date!"
+            });
+        }
+        else {
+            var expenseDate = $(this).val();
+            var startDate = $('#Start_Date').val();
+            var endDate = $('#Return_Date').val();
+
+            if (expenseDate >= startDate && expenseDate <= endDate) {
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Should be Between Start Date & Return Date"
+                });
+                $(this).val("");
+                $("#Amount-" + result[1]).val("");
+            }
+        }
+    });
+    function checkDivContent() {
+        var hasData = false;
+        $('#VehicleMaintanceTypes').find('input[type="text"], input[type="date"]').each(function () {
+            if ($(this).val().trim() !== '') {
+                hasData = true;
+                return false;
+            }
+        });
+
+        return hasData;
     }
 
     $('#ToFare, #FromFare').on('keyup', function () {
@@ -25,57 +189,80 @@
         var formattedAmount = formatAmountWithCommas(amountInput);
         $(this).val(formattedAmount);
     });
-    hideExistedExpenseOnRoutesData();
-    UpdateIdValuesDynamically();
-    //Hide the existed Expense on Routes
-    function hideExistedExpenseOnRoutesData() {
-
-        $(".DeleteExpenseOnRouteTypes").hide();
-        $(".Amount").prop('disabled', true);
-        $(".ExpenseTypeId").prop('disabled', true);
-    }
-
-    function UpdateIdValuesDynamically() {
-        var count = 1;
-        $('.Amount').each(function () {
-            if (this.id) {
-                this.id = this.id.split('-')[0] + "-" + count;
-                count++;
-            }
-        });
-        count = 1;
-        $('.ExpenseTypeId').each(function () {
-            if (this.id) {
-                this.id = this.id.split('-')[0] + "-" + count;
-                count++;
-            }
-        });
-        count = 1;
-        $('.ErrAmount').each(function () {
-            if (this.id) {
-                this.id = this.id.split('-')[0] + "-" + count;
-                count++;
-            }
-        });
-        count = 1;
-        $('.ExpenseOnRouteID').each(function () {
-            if (this.id) {
-                this.id = this.id.split('-')[0] + "-" + count;
-                count++;
-            }
-        });
-    }
 
     $("#AddExpenseTypes").click(function () {
-        //$("#ExpenseOnRouteTypes").clone().appendTo($("#ExpenseTypes"));
         $.ajax({
             url: '/Expense/ExpenseOnRoute',
             success: function (partialView) {
                 $('#ExpenseTypes').append(partialView);
-                UpdateIdValuesDynamically();
+                var count = 1;
+                $('.Amount').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.Expense_Date').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.ExpenseTypeId').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.ErrAmount').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.ErrExpense_Date').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
             }
         });
 
+    });
+
+    $("#AddMaintanceVeh").click(function () {
+        $.ajax({
+            url: '/Expense/VehicleMaintance',
+            success: function (partialView) {
+                $('#MaintanceVeh').append(partialView);
+                var count = 1;
+                $('.Maintance_Price').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.Maintance_Description').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+                count = 1;
+                $('.Maintance_Date').each(function () {
+                    if (this.id) {
+                        this.id = this.id.split('-')[0] + "-" + count;
+                        count++;
+                    }
+                });
+            }
+        });
     });
 
     function PreSave() {
@@ -125,13 +312,22 @@
             }
             count++;
         });
+        $('.Expense_Date').each(function () {
+            var val = $(this).val();
+            if (val == '') {
+                $("#ErrExpDate-" + count).html("Required *");
+                validform = false;
+            }
+            count++;
+        });
         return validform;
     }
 
     $("#SaveBuilty").click(function () {
+        debugger;
         if (PreSave()) {
+            debugger;
             var Model = {};
-            Model.RouteID = $("#RouteID").val();
             Model.BuiltyNo = $("#BuiltyNo").val();
             Model.DriveName = $("#DriveName").val();
             Model.TruckNo = $("#TruckNo").val();
@@ -148,30 +344,55 @@
             Model.TotalFare = parseFloat($("#TotalFare").val().replace(/,/g, ''));
             Model.TotalExpense = parseFloat($("#TotalExpense").val().replace(/,/g, ''));
             Model.TotalIncome = parseFloat($("#TotalIncome").val().replace(/,/g, ''));
+            Model.TotalMaintance = parseFloat($("#TotalMaintance").val().replace(/,/g, ''));
             Model.Expenses = [];
+            Model.Vehicles = [];
             var count = 1;
             $('.Amount').each(function () {
                 var ExpenseType = {};
+                var DieselLitre = $("#DieselLitre-" + count).val();
+                if (DieselLitre == '') {
+                    DieselLitre = "0";
+                }
                 ExpenseType.ExpenseOnRouteID = parseInt($("#ExpenseOnRouteID-" + count).val());
                 ExpenseType.ExpenseTypeId = parseInt($("#ExpenseTypeId-" + count).val());
+                ExpenseType.DieselLitre = DieselLitre;
                 ExpenseType.Amount = parseFloat($("#Amount-" + count).val().replace(/,/g, ''));
+                ExpenseType.Expense_Date = $("#Expense_Date-" + count).val();
                 Model.Expenses.push(ExpenseType);
                 count++;
             });
-            //Model = JSON.stringify({ 'Model': Model });
+            var result = checkDivContent();
+            if (result == true) {
+                var count_Maint = 1;
+                $(".Maintance_Price").each(function () {
+                    var VchMaintance = {};
+                    VchMaintance.VehicleMaintanceId = $("#VehicleMaintanceId-" + count_Maint).val();
+                    VchMaintance.Maintance_Description = $("#Maintance_Description-" + count_Maint).val();
+                    VchMaintance.Maintance_Price = parseFloat($("#Maintance_Price-" + count_Maint).val().replace(/,/g, ''));
+                    VchMaintance.Maintance_Date = $("#Maintance_Date-" + count_Maint).val();
+                    Model.Vehicles.push(VchMaintance);
+                    count_Maint++;
+                });
+            }
             $.ajax({
                 url: "/Expense/UpdateBuilty",
                 type: "Post",
                 data: Model,
                 success: function (response) {
-                    debugger;
-                    if (response.isSaved) {
+                    if (response.isAlreadyExist) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Duplicate!",
+                            text: "Builty Number: " + $("#BuiltyNo").val() + " already exists in the system"
+                        });
+                    }
+                    else if (response.isSaved) {
                         Swal.fire({
                             title: "Success!",
-                            text: "Builty Updated Successfully!",
+                            text: "Builty Saved Successfully!",
                             icon: "success"
                         });
-                        window.location.href = '/Expense/Index';
                     }
                     else {
                         Swal.fire({
@@ -202,9 +423,12 @@
         if (isNaN(TotalExpense)) {
             TotalExpense = 0;
         }
-        result = TotalFare - TotalExpense;
+        var TotalMaintance = parseFloat($("#TotalMaintance").val().replace(/,/g, ''));
+        if (isNaN(TotalMaintance)) {
+            TotalMaintance = 0;
+        }
+        result = TotalFare - TotalExpense - TotalMaintance;
         var formattedAmount = formatAmountWithCommas(result);
-        // $('#TotalIncome').val(result.toFixed(2));
         $('#TotalIncome').val(formattedAmount);
     }
 
@@ -224,12 +448,33 @@
         $('#TotalExpense').val(formattedAmount);
         CalculateTotalIncome();
     }
+    function CalculateTotalMaintanceAmount() {
+        var sum = 0;
+        $('.Maintance_Price').each(function () {
+            var val = parseFloat($(this).val().replace(/,/g, ''));
+            if (!isNaN(val) && val >= 0) {
+                sum += val;
+            }
+            else {
+                $(this).val(0)
+            }
+        });
+        var formattedAmount = formatAmountWithCommas(sum);
+        $('#TotalMaintance').val(formattedAmount);
+        //CalculateTotalIncome();
+    }
 
     $(document).on('input', '.Amount', function () {
         var inputAmount = $(this).val().replace(/[^0-9.]/g, '');
         var formattedAmount = formatAmount(inputAmount);
         $(this).val(formattedAmount);
         CalculateTotalExpenseTypeAmount();
+    });
+    $(document).on('input', '.Maintance_Price', function () {
+        var inputAmount = $(this).val().replace(/[^0-9.]/g, '');
+        var formattedAmount = formatAmount(inputAmount);
+        $(this).val(formattedAmount);
+        CalculateTotalMaintanceAmount();
     });
 
     function formatAmount(amount) {
@@ -243,7 +488,6 @@
     }
 
     $("#FromFare, #ToFare").on('change', function () {
-        debugger;
         var sum = 0;
         var FromFare = parseFloat($("#FromFare").val().replace(/,/g, ''));
         if (isNaN(FromFare) || FromFare <= 0) {
@@ -257,7 +501,6 @@
         sum += ToFare;
         var formattedAmount = formatAmountWithCommas(sum);
         // $('#TotalFare').val(sum.toFixed(2));
-        $('#TotalFare').val("");
         $('#TotalFare').val(formattedAmount);
         CalculateTotalIncome();
     });
@@ -265,7 +508,24 @@
     $('#ExpenseTypes').on('click', '.DeleteExpenseOnRouteTypes', function () {
         $(this).closest('#ExpenseOnRouteTypes').remove();
         CalculateTotalExpenseTypeAmount();
-        UpdateIdValuesDynamically();
+        UpdateExpenseIdValuesDynamically();
+    });
+
+    $('#MaintanceVeh').on('click', '.DeleteVehicleMaintanceTypes', function () {
+        $(this).closest('#VehicleMaintanceTypes').remove();
+        CalculateTotalMaintanceAmount();
+        UpdateVehicleIdValuesDynamically();
+    });
+    
+    $('.ExpenseTypeId').on('change', function () {
+        debugger;
+        var selectedText = this.id.find('option:selected').text();
+        if (selectedText.toLowerCase().indexOf('diesel') !== -1) {
+            this.id.removeAttr('hidden');
+        }
+        else {
+            this.id.attr('hidden', 'hidden');
+        }
     });
 
     $("#Back").click(function () {

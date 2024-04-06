@@ -40,7 +40,8 @@ namespace AzamAfridi.Controllers
                             {
                                 ExpenseTypeDescription = expenseType.ExpenseTypeDescription,
                                 TotalExpenseAmount = expense.Amount,
-                                ExpenseDate = expense.Expense_Date
+                                ExpenseDate = expense.Expense_Date,
+                                DieselLitre = expense.DieselLitre
                             }).ToListAsync();
             return PartialView("_ExpenseTypeReportPartial", expenses);
         }

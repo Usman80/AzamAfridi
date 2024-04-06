@@ -15,6 +15,7 @@ namespace AzamAfridi.Controllers
         }
         public IActionResult Index()
         {
+            @ViewData["Title"] = "Station Index";
             var list = _db.StationNames.ToList();
             return View(list);
         }

@@ -4,7 +4,7 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Builty</a></li>
+                    <li class="breadcrumb-item"><a href="#">Route Detail</a></li>
                     <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </div>
@@ -21,18 +21,17 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label for="BuiltyNo">Builty No:</label>
-                        <input type="hidden" class="form-control" id="RouteID" value="@Model.RouteID">
-                        <input type="text" class="form-control" id="BuiltyNo" value="@Model.BuiltyNo" placeholder="Builty Number" disabled="disabled">
+                        <input type="text" class="form-control" id="BuiltyNo" value="@Model.BuiltyNo" placeholder="Builty Number">
                         <label id="ErrBuiltyNo" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
                         <label for="DriveName">Driver Name:</label>
-                        <input type="text" class="form-control" id="DriveName" value="@Model.DriveName" placeholder="Drive Name">
+                        <input type="text" class="form-control text-uppercase" id="DriveName" value="@Model.DriveName" placeholder="Drive Name">
                         <label id="ErrDriveName" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
                         <label for="TruckNo">Truck No:</label>
-                        <input type="text" class="form-control" id="TruckNo" value="@Model.TruckNo" placeholder="Truck Number">
+                        <input type="text" class="form-control text-uppercase" id="TruckNo" value="@Model.TruckNo" placeholder="Truck Number">
                         <label id="ErrTruckNo" style="color:red;"></label>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="Weight">Weight:</label>
-                        <input class="form-control" id="Weight" value="@Model.Weight" placeholder="Enter Weight">
+                        <input class="form-control" id="Weight" value="@((Model.Weight != null && Model.Weight != 0) ? Model.Weight.ToString() : "")" placeholder="Weight">
                         <label id="ErrWeight" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
@@ -64,7 +63,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="FromFare">Fare:</label>
-                        <input class="form-control" id="FromFare" value="@Model.FromFare">
+                        <input class="form-control" id="FromFare" value="@((Model.FromFare != null && Model.FromFare != 0) ? Model.FromFare.ToString("N0") : "")" placeholder="Enter Fare">
                         <label id="ErrFromFare" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
@@ -81,7 +80,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label for="Return_Weight">Weight:</label>
-                        <input class="form-control" id="Return_Weight" value="@Model.Return_Weight" placeholder="Enter Weight">
+                        <input class="form-control" id="Return_Weight" value="@((Model.Return_Weight != null && Model.Return_Weight != 0) ? Model.Return_Weight.ToString() : "")" placeholder="Enter Weight">
                         <label id="ErrReturn_Weight" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
@@ -96,33 +95,31 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="ToFare">To-Fare:</label>
-                        <input class="form-control" id="ToFare" value="@Model.ToFare">
+                        <label for="ToFare">Return Fare:</label>
+                        <input class="form-control" id="ToFare" value="@((Model.ToFare != null && Model.ToFare != 0) ? Model.ToFare.ToString("N0") : "")" placeholder="Enter Fare">
                         <label id="ErrToFare" style="color:red;"></label>
                     </div>
                     <div class="col-md-4">
                         <label for="TotalFare">Total Fare:</label>
-                        <input class="form-control" id="TotalFare" disabled="disabled" value="@Model.TotalFare">
+                        <input class="form-control" id="TotalFare" disabled="disabled" value="@((Model.TotalFare != null && Model.TotalFare != 0) ? Model.TotalFare.ToString("N0") : "")">
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="TotalExpense">Total Expense:</label>
-                            <input class="form-control" id="TotalExpense" disabled="disabled" value="@Model.TotalExpense">
-                        </div>
+                        <label for="TotalExpense">Total Expense:</label>
+                        <input class="form-control" id="TotalExpense" disabled="disabled" value="@((Model.TotalExpense != null && Model.TotalExpense != 0) ? Model.TotalExpense.ToString("N0") : "")">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="TotalIncome">Total Income:</label>
-                            <input class="form-control" id="TotalIncome" disabled="disabled" value="@Model.TotalIncome">
-                        </div>
+                        <label for="TotalIncome">Total Income:</label>
+                        <input class="form-control" id="TotalIncome" disabled="disabled" value="@((Model.TotalIncome != null && Model.TotalIncome != 0) ? Model.TotalIncome.ToString("N0") : "")">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="TotalMaintance">Total Maintance:</label>
+                        <input class="form-control" id="TotalMaintance" disabled="disabled" value="@((Model.TotalMaintance != null && Model.TotalMaintance != 0) ? Model.TotalMaintance.ToString("N0") : "")">
                     </div>
                 </div>
+                @* Add Expense Regarding Trip *@
                 <hr />
-                <span class="input-group-append">
-                    <button type="button" class="btn btn-success btn-flat" id="AddExpenseTypes">Add</button>
-                </span>
                 <div id="ExpenseTypes">
                     @if (Model.Expenses != null && Model.Expenses.Count() > 0)
                     {
@@ -133,11 +130,31 @@
                     }
                 </div>
                 <span class="input-group-append">
+                    <button type="button" class="btn btn-success btn-flat" id="AddExpenseTypes"><i class="fas fa-plus"></i></button>
+                </span>
+                @* Add Maintance Regarding Vehicle *@
+                <hr />
+                <div id="MaintanceVeh">
+                    @if (Model.Vehicles != null && Model.Vehicles.Count() > 0)
+                    {
+                        @foreach (var Vehicles in Model.Vehicles)
+                        {
+                            @Html.Partial("VehicleMaintance", Vehicles)
+                        }
+                    }
+                </div>
+                <span class="input-group-append">
+                    <button type="button" class="btn btn-success btn-flat" id="AddMaintanceVeh"><i class="fas fa-plus"></i></button>
+                </span>
+                <hr />
+
+                <span class="input-group-append">
                     <button type="button" class="btn btn-primary btn-flat" id="SaveBuilty">Save Builty</button>
-                    <button type="button" class="btn btn-danger btn-flat" style="margin-left: 10px;" id="Back">Back</button>
+                    <button type="button" class="btn btn-danger btn-flat" style="margin-left: 10px;" id="Back"><i class="fas fa-arrow-left"></i></button>
                 </span>
             </div>
         </div>
     </div>
 </div>
+
 <script src="~/js/expense_builty/edit/jquery-expense_builty_edit-min.js"></script>

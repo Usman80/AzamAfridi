@@ -7,6 +7,8 @@
         public double TotalExpenseAmount { get; set; }
         public DateTime ExpenseDate { get; set; }
 
+        public string DieselLitre { get; set; } 
+
         public string VehicleMaintanceId { get; set; } 
         public string VehicleMaintDescription { get; set; }
         public double VehicleMaintPrice { get; set; }

@@ -31,8 +31,7 @@
     function hideExistedExpenseOnRoutesData() {
 
         $(".DeleteExpenseOnRouteTypes").hide();
-        $(".Amount").prop('disabled', true);
-        $(".ExpenseTypeId").prop('disabled', true);
+        $(".DeleteVehicleMaintanceTypes").hide();
     }
 
     function UpdateIdValuesDynamically() {

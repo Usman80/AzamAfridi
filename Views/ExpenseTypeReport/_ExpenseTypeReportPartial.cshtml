@@ -20,6 +20,7 @@
                                     <thead>
                                         <tr>
                                             <th>Expense Description</th>
+                                            <th>Diesel Litre</th>
                                             <th>Amount</th>
                                             <th>Expense Date</th>
                                         </tr>
@@ -30,6 +31,10 @@
                                             TotalExpense = Convert.ToDecimal(expense.TotalExpenseAmount) + TotalExpense;
                                             <tr>
                                                 <td>@expense.ExpenseTypeDescription</td>
+                                                @if(expense.DieselLitre != null)
+                                                {
+                                                    <td>@expense.DieselLitre</td>
+                                                }
                                                 <td>@expense.TotalExpenseAmount.ToString("N0")</td>
                                                 <td>@expense.ExpenseDate.ToString("dd/MM/yyyy")</td>
                                             </tr>

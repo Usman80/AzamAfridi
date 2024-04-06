@@ -9,13 +9,17 @@
     </div>
     <div class="col-md-4">
         <label for="Maintance_Price">Amount:</label>
-        <input class="form-control Maintance_Price" id="Maintance_Price-1" value="@((Model.Maintance_Price != null && Model.Maintance_Price != 0) ? Model.Maintance_Price.ToString() : "")" placeholder="Enter Maintance Amount">
-        <input type="hidden" value="@Model.VehicleMaintanceId" id="VehicleMaintanceId-1" class="VehicleMaintanceId" />
+        <input class="form-control Maintance_Price" id="Maintance_Price-1" value="@((Model.Maintance_Price != null && Model.Maintance_Price != 0) ? Model.Maintance_Price.ToString("N0") : "")" placeholder="Enter Maintance Amount">
         <label id="ErrMaintance_Price-1" class="ErrMaintance_Price" style="color:red;"></label>
     </div>
     <div class="col-md-2">
         <label for="Maintance_Date">Date:</label>
-        <input type="date" class="form-control Maintance_Date" id="Maintance_Date-1" value="@Model.Maintance_Date">
+        @{
+            string Month = Model.Maintance_Date.Month < 10 ? "0" + Model.Maintance_Date.Month : Model.Maintance_Date.Month.ToString();
+            string day = Model.Maintance_Date.Day < 10 ? "0" + Model.Maintance_Date.Day : Model.Maintance_Date.Day.ToString();
+            string date = Model.Maintance_Date.Year + "-" + Month + "-" + day;
+        }
+        <input type="date" class="form-control Maintance_Date" id="Maintance_Date-1" value="@date">
         <input type="hidden" value="@Model.VehicleMaintanceId" id="VehicleMaintanceId-1" class="VehicleMaintanceId" />
         <label id="ErrMaintance_Date-1" class="ErrMaintance_Date" style="color:red;"></label>
     </div>
